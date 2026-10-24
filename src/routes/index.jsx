@@ -18,154 +18,154 @@ export const Route = createFileRoute('/')({
   component: IndexComponent,
 })
 const fallbackSectionDetails = [
-    {
-        "menuName": "మన స్వాతి",
-        "sections": [
-            {
-              "sectionTitle": "ఈ సంచిక",
-              "sectionName": "editions",
-              "coverImage": "",
-              "tiles": [
-                {
-                  "title": "రుచుల ప్రపంచం",
-                  "text": "ఇండియను వంటలు,ఆరోగ్యకరమయిన ఆహరం ",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/Food.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=VsUvi5gBVKNTO%2FX3vkD5O7xJmMpTp7SWojyvKn66kpY%3D"
-                },
-                {
-                  "title": "మన సంస్కృతి",
-                  "text": "తెలుగు వారసత్వం,ప్రతిష్టుల నందవ్యాసం",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/temple.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=iCbZxNCkFI%2BG1bM%2BhiG3lWlpMH5uxTvfeVICX4RrKGs%3D"
-                },
-                {
-                  "title": "మన కుటుంబం",
-                  "text": "మహిళల ఆరోగ్యం,జీవన శైలి",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/woman.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=expHf%2FnxuLmbyri6vahGAqSLE49P52Jni7zHlxTpmo0%3D"
-                },
-                {
-                  "title": "పిల్లల ప్రపంచం",
-                  "text": "పిల్లల కోసం ప్రత్యేక కథనాలు,చిట్టాలు",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/family.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=ogDIrc63YXl3LgI%2B1ST7HR0SpSC%2FmA0fqk%2FGqVdtZxM%3D"
-                }
-              ],
-              sectionDesc: ""
-            },
-            {
-              "sectionTitle": "స్వాతి ప్రత్యేకం",
-              "sectionName": "special",
-              "coverImage": "",
-              "tiles": [
-                {
-                  "title": "2026",
-                  "text": "",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/family.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=ogDIrc63YXl3LgI%2B1ST7HR0SpSC%2FmA0fqk%2FGqVdtZxM%3D"
-                },
-                {
-                  "title": "అందం & ఆరోగ్యం",
-                  "text": "సహజ సౌందర్యానికి చిట్కాలు",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/beauty.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=r5WySMupT0SmSPvxptJMBnAl6JhyHk9CDzRQjUMbWqs%3D"
-                },
-                {
-                  "title": "కళలు & సంస్కృతి",
-                  "text": "మన వారసత్వం మన గర్వం",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/arts.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=OiDWvZCaAKrh77zBw%2Boo126ISCRXuSrMb21jZCWBOyc%3D"
-                },
-                {
-                  "title": "ప్రయాణం",
-                  "text": "ప్రపంచ అందాల వైపు",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/journey.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=z22USjVrk%2Ffgp0nYugbEfaa%2F3ZqnMgC0RlrLBYTLPYA%3D"
-                }
-              ],
-              sectionDesc: ""
-            },
-            {
-              "sectionTitle": "కథనాలు",
-              "sectionName": "articles",
-              "coverImage": "",
-              "tiles": [
-                {
-                  "title": "కుటుంబం",
-                  "text": "సంబంధాలు,సంభాషణలు,సంతోషాలు",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-family.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=I0kGb5%2BQViz%2BCStXtvV9fn118rsnHAUt1d11skOnios%3D"
-                },
-                {
-                  "title": "వంటలు",
-                  "text": "రుచికరమయిన వంటకాలు,ఆరోగ్యకరమయిన ఆహారం",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-food.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=MqLyAG%2B04HZ4KXrvzlQUyu5GQ58IOcg6ogJCWTJp4w4%3D"
-                },
-                {
-                  "title": "ఆరోగ్యం",
-                  "text": "శారీరక,మానసిక ఆరోగ్యం",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-health.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=pKDy0B6p0SLMX8EkkiTqraeJ7wCjChPDz%2BXozr%2BVYJo%3D"
-                },
-                {
-                  "title": "ఇల్లు అందంగా",
-                  "text": "గృహ అలంకరణ,జీవన శైలి",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-house.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=0x1cAhCW2AOjJj%2Fdufj2LngoIRK%2FJQuNK2AVaAMn2bQ%3D"
-                },
-                {
-                  "title": "పిల్లల కోణం",
-                  "text": "పిల్లల కథలు,విద్య,వినోదం ",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-kids.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=D2wEC2zFCt9Qdw5afwtiN7oeoSxYjHVfN0%2B2Pv9gBAw%3D"
-                },
-                {
-                  "title": "పుస్తకాలు",
-                  "text": "పఠనం,సమీక్షలు,రచనలు ",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-books.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=oR5McDmxEbxemwcg3Cfnc7CvazTagK5eZXyN3YfuPfw%3D"
-                }
-              ],
-              sectionDesc: ""
-            },
-            {
-              "sectionTitle": "మా 43 ఏళ్ల ప్రయాణం",
-              "sectionName": "journey",
-              "coverImage": "",
-              "tiles": [
-                {
-                  "title": "1984  -  2026",
-                  "text": "తెలుగు కుటుంబాల ప్రేమాభిమానాలతో \r\n\r\n43 సంవత్సరాల స్వాతి ప్రయాణం...",
-                  "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/43_image.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=lwa6%2Fyk%2FCBBZCnF1EHByNRq3YjMSfU27BUJiOGhuESc%3D"
-                }
-              ],
-              sectionDesc: ""
-            },
-            {
-              "sectionTitle": "స్వాతి గురించి",
-              "sectionName": "aboutus",
-              "coverImage": "",
-              "tiles": [
-                {
-                  "title": "43 సంవత్సరాలుగా తెలుగు కుటుంబంతో కలిసి\r\nప్రయాణిస్తున్న స్వాతి కథ... మన పాఠకుల ప్రేమ రచయితల స్ఫూర్తి, మా ప్రయాణం ఇంకా కొనసాగుతూనే ఉంది.",
-                  "text": "43 సంవత్సరాలుగా తెలుగు కుటుంబంతో కలిసి ప్రయాణిస్తున్న స్వాతి కథ...",
-                  "image": ""
-                }
-              ],
-              sectionDesc: ""
-            },
-            {
-              "sectionTitle": "సంప్రదించండి",
-              "sectionName": "contactus",
-              "coverImage": "",
-              "tiles": [
-                {
-                  "title": "సంస్కార వికాసం",
-                  "text": "క్రమశిక్షణ, బాధ్యతలు,సమాజంలో గౌరవం",
-                  "image": ""
-                },
-                {
-                  "title": "విద్యాభివృద్ధి కోసం",
-                  "text": "పుస్తకాలు, జ్ఞానం సముపార్జన",
-                  "image": ""
-                },
-                {
-                  "title": "సామాజిక సమభావం",
-                  "text": "ఇతర సమూహాలతో,విస్తృతాలు",
-                  "image": ""
-                }
-              ],
-              sectionDesc: ""
-            }
-        ]
-    }
+  {
+    "menuName": "మన స్వాతి",
+    "sections": [
+      {
+        "sectionTitle": "ఈ సంచిక",
+        "sectionName": "editions",
+        "coverImage": "",
+        "tiles": [
+          {
+            "title": "రుచుల ప్రపంచం",
+            "text": "ఇండియను వంటలు,ఆరోగ్యకరమయిన ఆహరం ",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/Food.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=VsUvi5gBVKNTO%2FX3vkD5O7xJmMpTp7SWojyvKn66kpY%3D"
+          },
+          {
+            "title": "మన సంస్కృతి",
+            "text": "తెలుగు వారసత్వం,ప్రతిష్టుల నందవ్యాసం",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/temple.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=iCbZxNCkFI%2BG1bM%2BhiG3lWlpMH5uxTvfeVICX4RrKGs%3D"
+          },
+          {
+            "title": "మన కుటుంబం",
+            "text": "మహిళల ఆరోగ్యం,జీవన శైలి",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/woman.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=expHf%2FnxuLmbyri6vahGAqSLE49P52Jni7zHlxTpmo0%3D"
+          },
+          {
+            "title": "పిల్లల ప్రపంచం",
+            "text": "పిల్లల కోసం ప్రత్యేక కథనాలు,చిట్టాలు",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/family.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=ogDIrc63YXl3LgI%2B1ST7HR0SpSC%2FmA0fqk%2FGqVdtZxM%3D"
+          }
+        ],
+        sectionDesc: ""
+      },
+      {
+        "sectionTitle": "స్వాతి ప్రత్యేకం",
+        "sectionName": "special",
+        "coverImage": "",
+        "tiles": [
+          {
+            "title": "2026",
+            "text": "",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/family.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=ogDIrc63YXl3LgI%2B1ST7HR0SpSC%2FmA0fqk%2FGqVdtZxM%3D"
+          },
+          {
+            "title": "అందం & ఆరోగ్యం",
+            "text": "సహజ సౌందర్యానికి చిట్కాలు",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/beauty.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=r5WySMupT0SmSPvxptJMBnAl6JhyHk9CDzRQjUMbWqs%3D"
+          },
+          {
+            "title": "కళలు & సంస్కృతి",
+            "text": "మన వారసత్వం మన గర్వం",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/arts.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=OiDWvZCaAKrh77zBw%2Boo126ISCRXuSrMb21jZCWBOyc%3D"
+          },
+          {
+            "title": "ప్రయాణం",
+            "text": "ప్రపంచ అందాల వైపు",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/journey.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=z22USjVrk%2Ffgp0nYugbEfaa%2F3ZqnMgC0RlrLBYTLPYA%3D"
+          }
+        ],
+        sectionDesc: ""
+      },
+      {
+        "sectionTitle": "కథనాలు",
+        "sectionName": "articles",
+        "coverImage": "",
+        "tiles": [
+          {
+            "title": "కుటుంబం",
+            "text": "సంబంధాలు,సంభాషణలు,సంతోషాలు",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-family.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=I0kGb5%2BQViz%2BCStXtvV9fn118rsnHAUt1d11skOnios%3D"
+          },
+          {
+            "title": "వంటలు",
+            "text": "రుచికరమయిన వంటకాలు,ఆరోగ్యకరమయిన ఆహారం",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-food.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=MqLyAG%2B04HZ4KXrvzlQUyu5GQ58IOcg6ogJCWTJp4w4%3D"
+          },
+          {
+            "title": "ఆరోగ్యం",
+            "text": "శారీరక,మానసిక ఆరోగ్యం",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-health.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=pKDy0B6p0SLMX8EkkiTqraeJ7wCjChPDz%2BXozr%2BVYJo%3D"
+          },
+          {
+            "title": "ఇల్లు అందంగా",
+            "text": "గృహ అలంకరణ,జీవన శైలి",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-house.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=0x1cAhCW2AOjJj%2Fdufj2LngoIRK%2FJQuNK2AVaAMn2bQ%3D"
+          },
+          {
+            "title": "పిల్లల కోణం",
+            "text": "పిల్లల కథలు,విద్య,వినోదం ",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-kids.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=D2wEC2zFCt9Qdw5afwtiN7oeoSxYjHVfN0%2B2Pv9gBAw%3D"
+          },
+          {
+            "title": "పుస్తకాలు",
+            "text": "పఠనం,సమీక్షలు,రచనలు ",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-books.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=oR5McDmxEbxemwcg3Cfnc7CvazTagK5eZXyN3YfuPfw%3D"
+          }
+        ],
+        sectionDesc: ""
+      },
+      {
+        "sectionTitle": "మా 43 ఏళ్ల ప్రయాణం",
+        "sectionName": "journey",
+        "coverImage": "",
+        "tiles": [
+          {
+            "title": "1984  -  2026",
+            "text": "తెలుగు కుటుంబాల ప్రేమాభిమానాలతో \r\n\r\n43 సంవత్సరాల స్వాతి ప్రయాణం...",
+            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/43_image.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=lwa6%2Fyk%2FCBBZCnF1EHByNRq3YjMSfU27BUJiOGhuESc%3D"
+          }
+        ],
+        sectionDesc: ""
+      },
+      {
+        "sectionTitle": "స్వాతి గురించి",
+        "sectionName": "aboutus",
+        "coverImage": "",
+        "tiles": [
+          {
+            "title": "43 సంవత్సరాలుగా తెలుగు కుటుంబంతో కలిసి\r\nప్రయాణిస్తున్న స్వాతి కథ... మన పాఠకుల ప్రేమ రచయితల స్ఫూర్తి, మా ప్రయాణం ఇంకా కొనసాగుతూనే ఉంది.",
+            "text": "43 సంవత్సరాలుగా తెలుగు కుటుంబంతో కలిసి ప్రయాణిస్తున్న స్వాతి కథ...",
+            "image": ""
+          }
+        ],
+        sectionDesc: ""
+      },
+      {
+        "sectionTitle": "సంప్రదించండి",
+        "sectionName": "contactus",
+        "coverImage": "",
+        "tiles": [
+          {
+            "title": "సంస్కార వికాసం",
+            "text": "క్రమశిక్షణ, బాధ్యతలు,సమాజంలో గౌరవం",
+            "image": ""
+          },
+          {
+            "title": "విద్యాభివృద్ధి కోసం",
+            "text": "పుస్తకాలు, జ్ఞానం సముపార్జన",
+            "image": ""
+          },
+          {
+            "title": "సామాజిక సమభావం",
+            "text": "ఇతర సమూహాలతో,విస్తృతాలు",
+            "image": ""
+          }
+        ],
+        sectionDesc: ""
+      }
+    ]
+  }
 ];
 const issueHighlights = [
   {
@@ -266,42 +266,44 @@ function IndexComponent() {
   const editionSection = getSection('editions')
   const specialSection = getSection('special')
   const storiesSection = getSection('articles')
+  const journeySection = getSection('journey')
   const aboutSection = getSection('aboutus')
   const issueItems = editionSection?.tiles?.length
     ? editionSection.tiles.map((tile, index) => ({
-        title: tile.title,
-        description: tile.text,
-        icon: tile.title,
-        image: tile.image?.trim(),
-        color: issueHighlights[index % issueHighlights.length].color,
-      }))
+      title: tile.title,
+      description: tile.text,
+      icon: tile.title,
+      image: tile.image?.trim(),
+      color: issueHighlights[index % issueHighlights.length].color,
+    }))
     : issueHighlights
   const specialItems = specialSection?.tiles?.length
     ? specialSection.tiles.map((tile, index) => ({
-        category: specialStories[index % specialStories.length].category,
-        title: tile.title,
-        description: tile.text,
-        image:
-          tile.image?.trim() || specialStories[index % specialStories.length].image,
-        tone: specialStories[index % specialStories.length].tone,
-      }))
+      category: specialStories[index % specialStories.length].category,
+      title: tile.title,
+      description: tile.text,
+      image:
+        tile.image?.trim() || specialStories[index % specialStories.length].image,
+      tone: specialStories[index % specialStories.length].tone,
+    }))
     : specialStories
   const storyItems = storiesSection?.tiles?.length
     ? storiesSection.tiles.map((tile, index) => ({
-        ...tile,
-        image:
-          tile.image?.trim() ||
-          `https://images.unsplash.com/${storyCategories[index % storyCategories.length].image}?auto=format&fit=crop&w=480&q=80`,
-      }))
+      ...tile,
+      image:
+        tile.image?.trim() ||
+        `https://images.unsplash.com/${storyCategories[index % storyCategories.length].image}?auto=format&fit=crop&w=480&q=80`,
+    }))
     : storyCategories.map((story) => ({
-        title: story.title,
-        text: story.description,
-        image: `https://images.unsplash.com/${story.image}?auto=format&fit=crop&w=480&q=80`,
-      }))
+      title: story.title,
+      text: story.description,
+      image: `https://images.unsplash.com/${story.image}?auto=format&fit=crop&w=480&q=80`,
+    }))
+  const journeyTile = journeySection?.tiles?.[0]
   const aboutTile = aboutSection?.tiles?.[0]
 
   return (
-    <div className="space-y-8 sm:space-y-10">
+    <div className="homePage">
       {isLoadingSections && (
         <p role="status" className="rounded-lg bg-white px-4 py-3 text-sm text-stone-600">
           Homepage sections are loading…
@@ -326,9 +328,9 @@ function IndexComponent() {
           id="current-issue"
           className="flex flex-col justify-center rounded-[30px] sm:p-5"
         >
-              <SectionHeading eyebrow="పాఠకుల కోసం" href="#stories">
-          {editionSection?.sectionTitle || 'ఈ సంచిక'}
-        </SectionHeading>
+          <SectionHeading eyebrow="పాఠకుల కోసం" href="#stories">
+            {editionSection?.sectionTitle || 'ఈ సంచిక'}
+          </SectionHeading>
           <p className="mt-2 max-w-xl font-telugu text-sm leading-6 text-stone-600">
             {editionSection?.sectionDesc ||
               'మీకు ఇష్టమైన...'}
@@ -395,7 +397,7 @@ function IndexComponent() {
           <div className="relative z-10 mt-6">
             <a
               href="mailto:subscriptions@swati.in"
-              className="flex items-center justify-between gap-2 rounded-2xl bg-brand-crimson px-4 py-3 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.8)] transition hover:bg-brand-darkRed"
+              className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-brand-crimson px-5 py-2.5 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
             >
               సభ్యత్వం పొందండి <ArrowRight className="h-4 w-4" />
             </a>
@@ -419,7 +421,7 @@ function IndexComponent() {
       </section>
 
       <section className="special-section">
-        <SectionHeading eyebrow="పాఠకుల కోసం" href="#stories">
+        <SectionHeading eyebrow="పాఠకుల కోసం" href="#special-section">
           {specialSection?.sectionTitle || 'స్వాతి ప్రత్యేకం'}
         </SectionHeading>
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -446,7 +448,7 @@ function IndexComponent() {
       </section>
 
       <section id="stories" className="stories-section">
-        <SectionHeading eyebrow="చదవండి · తెలుసుకోండి" href="#journey">
+        <SectionHeading eyebrow="చదవండి · తెలుసుకోండి" href="#stories">
           {storiesSection?.sectionTitle || 'కథనాలు'}
         </SectionHeading>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
@@ -474,12 +476,42 @@ function IndexComponent() {
           ))}
         </div>
       </section>
+      <section
+        id="journey"
+        className="grid overflow-hidden bg-[#f2e8dc] md:grid-cols-[0.85fr_1.15fr]"
+      >
+        <div className="flex flex-col justify-center p-7 sm:p-10">
+          <SectionHeading eyebrow="మన గురించి" href="#journey">
+            {journeySection?.sectionTitle || 'స్వాతి గురించి'}
+          </SectionHeading>
+          <p className="mt-2 text-2xl font-semibold tracking-[0.12em] text-stone-500">
+            {journeyTile?.title || '1984 — 2026'}
+          </p>
+          <p className="mt-4 max-w-md font-telugu text-sm leading-7 text-stone-600">
+            {journeyTile?.text ||
+              'తెలుగు కుటుంబాల ప్రేమాభిమానాలతో, కథలతో, జ్ఞాపకాలతో సాగుతున్న స్వాతి ప్రయాణం...'}
+          </p>
+          <a
+            href="#about"
+            className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-brand-crimson px-5 py-2.5 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
+          >
+            మా ప్రయాణం గురించి <ArrowRight className="h-4 w-4" />
+          </a>
+        </div>
+        <div className="journey-row">
+          <img
+            className="journey-banner"
+            src={journeySection?.tiles[0]?.image}
+            alt="Books representing Swati's 43-year journey"
+          />
+        </div>
+      </section>
 
-      <div className="about-sections overflow-hidden rounded-xl border border-stone-200">
-        <section id="journey" className="about-hero flex min-h-[160px] items-center px-5 py-5 sm:px-8 sm:py-6">
+      <div className="about-sections overflow-hidden border-stone-200">
+        <section id="about" className="about-hero flex min-h-[160px] items-center px-5 py-5 sm:px-8 sm:py-6">
           <div className="max-w-sm">
 
-              <SectionHeading eyebrow="మన గురించి" href="#about">
+            <SectionHeading eyebrow="మన గురించి" href="#about">
               {aboutSection?.sectionTitle || 'స్వాతి గురించి'}
             </SectionHeading>
             <p className="mt-3 font-telugu text-sm leading-6 text-stone-700">
@@ -488,40 +520,40 @@ function IndexComponent() {
             </p>
             <a
               href="#about"
-              className="mt-3 inline-flex items-center gap-2 rounded-md bg-brand-crimson px-4 py-2 font-telugu text-xs font-bold text-white transition hover:bg-brand-darkRed"
+              className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-brand-crimson px-5 py-2.5 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
             >
               మా గురించి తెలుసుకోండి <ArrowRight className="h-4 w-4" />
             </a>
           </div>
         </section>
 
-        <section id="about" className="grid gap-4 border-t border-stone-200 px-5 py-4 sm:px-8 md:grid-cols-[1.15fr_2fr] md:items-center">
+        <section id="contact" className="grid gap-4 border-t border-stone-200 px-5 py-4 sm:px-8 md:grid-cols-[1.15fr_2fr] md:items-center">
           <div>
-             <SectionHeading eyebrow="మన గురించి" href="#about">
+            <SectionHeading eyebrow="మన గురించి" href="#contact">
               {aboutSection?.sectionDesc || 'సంప్రదించండి'}
             </SectionHeading>
             <p className="mt-2 font-telugu text-sm leading-6 text-stone-600">
               మీ అభిప్రాయాలు, సూచనలు, సహకారం మాకు ఎంతో విలువైనవి.
             </p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-3 sm:gap-0">
+          <div className="grid gap-3 sm:grid-cols-3 sm:gap-0 md:border-l md:border-stone-300">
             {[
               { icon: PencilLine, title: 'సంపాదకీయం', text: 'కథలు, రచనలు, పాఠకుల కోసం' },
               { icon: Megaphone, title: 'విజ్ఞాపన కోసం', text: 'ప్రకటనలు, బ్రాండ్ భాగస్వామ్యాలు' },
               { icon: Mail, title: 'సాధారణ సమాచారం', text: 'ఇతర సమాచారం, సూచనలు' },
             ].map(({ icon: Icon, title, text }) => (
-              <div key={title} className="flex items-start gap-3 border-stone-300 py-1 sm:border-l sm:px-4 sm:first:border-l-0">
-                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-brand-crimson" />
-                <div>
+              <div key={title} className="flex flex-col items-center px-3 py-2 text-center sm:border-l sm:border-stone-300 sm:first:border-l-0 sm:px-2 md:px-3">
+                <Icon className="h-5 w-5 shrink-0 text-brand-crimson" />
+                <div className="mt-2">
                   <h3 className="font-telugu text-sm font-bold text-stone-800">{title}</h3>
-                  <p className="mt-1 font-telugu text-xs leading-5 text-stone-500">{text}</p>
+                  <p className="mt-1 font-telugu text-xs leading-4 text-stone-500">{text}</p>
                 </div>
               </div>
             ))}
           </div>
         </section>
       </div>
-      </div>
+    </div>
 
   )
 }

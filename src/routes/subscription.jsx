@@ -629,7 +629,7 @@ function SubscriptionPage() {
 
                   {offerIndex === 2 && offerLanguages.length > 0 && (
                     <label className="mt-3 grid gap-1 font-telugu text-xs font-semibold text-stone-700">
-                      భాష
+                      {copy.language}
                       <select
                         value={selectedLanguageCode}
                         className="h-10 rounded-md border border-stone-300 bg-white px-3 text-sm"
