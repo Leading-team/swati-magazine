@@ -26,7 +26,6 @@ html {
 }
 
 .special-section {
-  border-radius: 0.75rem;
   background-color: #f8f0e6;
   padding: 1rem;
 }
@@ -39,12 +38,13 @@ html {
 
 .about-hero {
   background:
-    linear-gradient(90deg, rgba(253, 250, 246, .97) 0%, rgba(253, 250, 246, .91) 32%, rgba(253, 250, 246, .12) 68%),
-    url("./assets/aboutus_img.png") center 55% / cover;
+    linear-gradient(90deg, rgba(253, 250, 246, .98) 0%, rgba(253, 250, 246, .94) 40%, rgba(253, 250, 246, .12) 100%),
+    url("./assets/aboutus_img.png") center right / cover;
 }
 
 .about-sections {
   background-color: #fbf7f1;
+  border-bottom: 2px solid #b91c1c;
 }
 
 @media (min-width: 640px) {
@@ -54,11 +54,17 @@ html {
   }
 }
 
+@media (min-width: 768px) {
+  .about-sections > #contact {
+    border-left: 1px solid #e7ddd0;
+  }
+}
+
 @media (max-width: 640px) {
   .about-hero {
     background:
-      linear-gradient(90deg, rgba(253, 250, 246, .94) 0%, rgba(253, 250, 246, .84) 65%, rgba(253, 250, 246, .42) 100%),
-      url("./assets/aboutus_img.png") center / cover;
+      linear-gradient(90deg, rgba(253, 250, 246, .96) 0%, rgba(253, 250, 246, .9) 58%, rgba(253, 250, 246, .38) 100%),
+      url("./assets/aboutus_img.png") center right / cover;
   }
 }
 
@@ -68,3 +74,6 @@ html {
   display: block;
   clip-path: inset(9px);
 }
+
+.section-heading { display: flex; align-items: center; justify-content: space-between; }
+.section-heading > a { font-weight: bold; display: inline-flex; gap: 4px; align-items: center; color: #B91C1C; font-size: 11px; white-space: nowrap; }

@@ -420,37 +420,64 @@ function IndexComponent() {
         </aside>
       </section>
 
-      <section className="special-section">
+      <section id="special-section" className="special-section">
+        <div className="section-heading">
         <SectionHeading eyebrow="పాఠకుల కోసం" href="#special-section">
           {specialSection?.sectionTitle || 'స్వాతి ప్రత్యేకం'}
         </SectionHeading>
-        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+         <a href="/special">
+              మరిన్ని ప్రత్యేకం <ArrowRight size={14} />
+            </a>
+            </div>
+        <div className="grid grid-cols-2 gap-x-4 gap-y-5 xl:grid-cols-5">
           {specialItems.map((story, index) => (
             <article
               key={`${story.title}-${index}`}
-              className="group relative isolate flex h-56 flex-col justify-end overflow-hidden rounded-2xl bg-stone-800 p-4 text-white shadow-sm sm:h-60"
+              className={
+                index === 0
+                  ? 'group relative isolate col-span-2 flex h-52 flex-col justify-end overflow-hidden bg-stone-800 p-4 text-white shadow-sm sm:h-60 xl:h-48'
+                  : 'group flex min-w-0 flex-col overflow-hidden'
+              }
             >
               <img
                 src={story.image}
                 alt=""
                 loading="lazy"
-                className="absolute inset-0 -z-20 h-full w-full object-cover transition duration-700 group-hover:scale-105"
+                className={
+                  index === 0
+                    ? 'absolute inset-0 -z-20 h-full w-full object-cover transition duration-700 group-hover:scale-105'
+                    : 'h-28 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-36 xl:h-24'
+                }
               />
-              <div className={`absolute inset-0 -z-10 bg-gradient-to-t ${story.tone} via-black/15 to-transparent`} />
-              <span className="mb-2 w-fit rounded-full bg-white/15 px-3 py-1 font-telugu text-[10px] font-semibold backdrop-blur">
-                {story.category}
-              </span>
-              <h3 className="font-telugu text-xl font-bold">{story.title}</h3>
-              <p className="mt-1 font-telugu text-xs text-white/80">{story.description}</p>
+              {index === 0 ? (
+                <>
+                  <div className={`absolute inset-0 -z-10 bg-gradient-to-t ${story.tone} via-black/15 to-transparent`} />
+                  <span className="mb-2 w-fit rounded-full bg-white/15 px-3 py-1 font-telugu text-[10px] font-semibold backdrop-blur">
+                    {story.category}
+                  </span>
+                  <h3 className="font-telugu text-xl font-bold">{story.title}</h3>
+                  <p className="mt-1 font-telugu text-xs text-white/80">{story.description}</p>
+                </>
+              ) : (
+                <div className="pt-2">
+                  <h3 className="font-telugu text-sm font-bold text-stone-800">{story.title}</h3>
+                  <p className="mt-1 font-telugu text-[11px] leading-5 text-stone-600">{story.description}</p>
+                </div>
+              )}
             </article>
           ))}
         </div>
       </section>
 
       <section id="stories" className="stories-section">
+        <div className="section-heading">
         <SectionHeading eyebrow="చదవండి · తెలుసుకోండి" href="#stories">
           {storiesSection?.sectionTitle || 'కథనాలు'}
         </SectionHeading>
+         <a href="/editions">
+              మరిన్ని కథనాలు <ArrowRight size={14} />
+            </a>
+        </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
           {storyItems.map((story, index) => (
             <a
@@ -507,10 +534,9 @@ function IndexComponent() {
         </div>
       </section>
 
-      <div className="about-sections overflow-hidden border-stone-200">
-        <section id="about" className="about-hero flex min-h-[160px] items-center px-5 py-5 sm:px-8 sm:py-6">
+      <div className="about-sections grid overflow-hidden border border-stone-200 md:grid-cols-[1.6fr_1fr]">
+        <section id="about" className="about-hero flex min-h-[210px] items-center px-5 py-5 sm:px-8 sm:py-6">
           <div className="max-w-sm">
-
             <SectionHeading eyebrow="మన గురించి" href="#about">
               {aboutSection?.sectionTitle || 'స్వాతి గురించి'}
             </SectionHeading>
@@ -527,27 +553,25 @@ function IndexComponent() {
           </div>
         </section>
 
-        <section id="contact" className="grid gap-4 border-t border-stone-200 px-5 py-4 sm:px-8 md:grid-cols-[1.15fr_2fr] md:items-center">
+        <section id="contact" className="flex flex-col justify-center gap-3 bg-[#fffaf5] px-5 py-5 sm:px-6">
           <div>
             <SectionHeading eyebrow="మన గురించి" href="#contact">
-              {aboutSection?.sectionDesc || 'సంప్రదించండి'}
+              సంప్రదించండి
             </SectionHeading>
-            <p className="mt-2 font-telugu text-sm leading-6 text-stone-600">
+            <p className="mt-1 font-telugu text-xs leading-5 text-stone-600">
               మీ అభిప్రాయాలు, సూచనలు, సహకారం మాకు ఎంతో విలువైనవి.
             </p>
           </div>
-          <div className="grid gap-3 sm:grid-cols-3 sm:gap-0 md:border-l md:border-stone-300">
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {[
               { icon: PencilLine, title: 'సంపాదకీయం', text: 'కథలు, రచనలు, పాఠకుల కోసం' },
               { icon: Megaphone, title: 'విజ్ఞాపన కోసం', text: 'ప్రకటనలు, బ్రాండ్ భాగస్వామ్యాలు' },
               { icon: Mail, title: 'సాధారణ సమాచారం', text: 'ఇతర సమాచారం, సూచనలు' },
             ].map(({ icon: Icon, title, text }) => (
-              <div key={title} className="flex flex-col items-center px-3 py-2 text-center sm:border-l sm:border-stone-300 sm:first:border-l-0 sm:px-2 md:px-3">
+              <div key={title} className="flex min-w-0 flex-col items-center rounded-xl bg-[#f4e8d9] px-2 py-3 text-center">
                 <Icon className="h-5 w-5 shrink-0 text-brand-crimson" />
-                <div className="mt-2">
-                  <h3 className="font-telugu text-sm font-bold text-stone-800">{title}</h3>
-                  <p className="mt-1 font-telugu text-xs leading-4 text-stone-500">{text}</p>
-                </div>
+                <h3 className="mt-2 font-telugu text-xs font-bold text-stone-800">{title}</h3>
+                <p className="mt-1 font-telugu text-[10px] leading-4 text-stone-600">{text}</p>
               </div>
             ))}
           </div>
