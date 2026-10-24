@@ -6,8 +6,9 @@ import {
   CalendarDays,
   Gift,
   Home,
-  MapPin,
-  Sparkles,
+  Mail,
+  Megaphone,
+  PencilLine,
   Truck,
 } from 'lucide-react'
 import currentCover from '../assets/current-cover.jpg'
@@ -229,16 +230,17 @@ const storyCategories = [
 
 function SectionHeading({ eyebrow, children, href }) {
   return (
-    <div className="mb-6 flex items-end justify-between gap-4 border-b border-stone-200 pb-3">
+    <div className="flex items-end justify-between gap-4 pb-2">
       <div>
-        {eyebrow && (
+        <h1 className="mt-1 font-telugu text-2xl font-bold text-stone-950 sm:text-3xl">
+          {children}
+        </h1>
+        <div className="h-0.5 w-9 bg-brand-crimson" />
+        {/* {eyebrow && (
           <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand-crimson/70">
             {eyebrow}
           </p>
-        )}
-        <h2 className="font-telugu text-2xl font-bold text-brand-darkRed sm:text-3xl">
-          {children}
-        </h2>
+        )} */}
       </div>
     </div>
   )
@@ -264,7 +266,6 @@ function IndexComponent() {
   const editionSection = getSection('editions')
   const specialSection = getSection('special')
   const storiesSection = getSection('articles')
-  const journeySection = getSection('journey')
   const aboutSection = getSection('aboutus')
   const issueItems = editionSection?.tiles?.length
     ? editionSection.tiles.map((tile, index) => ({
@@ -297,11 +298,10 @@ function IndexComponent() {
         text: story.description,
         image: `https://images.unsplash.com/${story.image}?auto=format&fit=crop&w=480&q=80`,
       }))
-  const journeyTile = journeySection?.tiles?.[0]
   const aboutTile = aboutSection?.tiles?.[0]
 
   return (
-    <div className="space-y-14 sm:space-y-16">
+    <div className="space-y-8 sm:space-y-10">
       {isLoadingSections && (
         <p role="status" className="rounded-lg bg-white px-4 py-3 text-sm text-stone-600">
           Homepage sections are loading…
@@ -312,33 +312,31 @@ function IndexComponent() {
           Homepage sections could not be loaded. Showing saved content. {sectionError.message}
         </p>
       )}
-      <section className="grid gap-5 lg:grid-cols-[0.82fr_1.35fr_0.9fr] lg:items-stretch">
-        <div className="relative flex min-h-[390px] items-center justify-center overflow-hidden rounded-2xl bg-gradient-to-br from-rose-100 via-white to-amber-100 p-5 shadow-sm sm:min-h-[470px]">
-          <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-white/70 to-transparent" />
+      <section className="hero grid gap-5 lg:grid-cols-[0.88fr_1.28fr_0.84fr] lg:items-stretch">
+        <div className="relative flex min-h-[340px] items-center justify-center overflow-hidden">
+          <div className="absolute inset-x-0 top-0 h-20 " />
           <img
             src={editionSection?.coverImage?.trim() || currentCover}
             alt="స్వాతి తాజా సంచిక ముఖచిత్రం"
-            className="relative h-[360px] max-w-full rounded-sm object-contain shadow-[0_20px_45px_-18px_rgba(63,18,18,0.45)] sm:h-[430px]"
+            className="relative h-[320px] max-w-full rounded-[12px] object-contain shadow-[0_22px_45px_-17px_rgba(74,22,22,0.55)] sm:h-[360px]"
           />
-          <span className="absolute bottom-5 left-5 rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.16em] text-brand-crimson shadow-sm">
-            {editionSection?.sectionTitle || 'ఈ వారం సంచిక'}
-          </span>
         </div>
 
-        <div id="current-issue" className="flex flex-col justify-center rounded-2xl border border-stone-200 bg-white p-6 shadow-sm sm:p-8">
-          <div className="mb-4 flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.16em] text-brand-crimson">
-            <CalendarDays className="h-4 w-4" /> 2026 · తాజా సంచిక
-          </div>
-          <h1 className="font-telugu text-3xl font-bold leading-snug text-stone-900 sm:text-4xl">
-            {editionSection?.sectionTitle || 'ఈ సంచికలో...'}
-          </h1>
-          <p className="mt-3 max-w-xl font-telugu text-sm leading-7 text-stone-600">
+        <div
+          id="current-issue"
+          className="flex flex-col justify-center rounded-[30px] sm:p-5"
+        >
+              <SectionHeading eyebrow="పాఠకుల కోసం" href="#stories">
+          {editionSection?.sectionTitle || 'ఈ సంచిక'}
+        </SectionHeading>
+          <p className="mt-2 max-w-xl font-telugu text-sm leading-6 text-stone-600">
             {editionSection?.sectionDesc ||
-              'మీకు ఇష్టమైన కథలు, ఆలోచింపజేసే విశేషాలు — ప్రతి వారం మీ కోసం ప్రత్యేకంగా.'}
+              'మీకు ఇష్టమైన...'}
           </p>
-          <div className="mt-6 space-y-4">
+
+          <div className="mt-4 space-y-2">
             {issueItems.map((item, index) => (
-              <article key={item.title} className="flex items-center gap-4">
+              <article key={item.title} className="flex items-center gap-3 rounded-2xl border border-stone-100 bg-stone-50/80 p-2">
                 {item.image ? (
                   <img
                     src={item.image}
@@ -352,63 +350,75 @@ function IndexComponent() {
                     {item.icon}
                   </div>
                 )}
-                <div>
+                <div className="min-w-0">
                   <h3 className="font-telugu text-base font-bold text-stone-800">{item.title}</h3>
-                  <p className="mt-1 font-telugu text-xs leading-5 text-stone-500">
+                  <p className="mt-0.5 font-telugu text-[11px] leading-5 text-stone-500">
                     {item.description}
                   </p>
                 </div>
               </article>
             ))}
           </div>
+
           <a
             href="#stories"
-            className="mt-7 inline-flex w-fit items-center gap-2 rounded-full bg-brand-crimson px-5 py-3 font-telugu text-sm font-bold text-white shadow-md shadow-red-900/15 transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
+            className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-brand-crimson px-5 py-2.5 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
           >
-            సంచికను చదవండి <ArrowRight className="h-4 w-4" />
+            ఈ సంచికను చదవండి <ArrowRight className="h-4 w-4" />
           </a>
         </div>
 
         <aside
           id="subscribe"
-          className="relative flex flex-col justify-between overflow-hidden rounded-2xl bg-brand-darkRed p-6 text-white shadow-sm sm:p-8"
+          className="relative text-center flex flex-col justify-between overflow-hidden bg-[#fff7f5] text-stone-800 shadow-[0_18px_35px_-25px_rgba(80,22,22,0.28)] sm:p-4"
         >
-          
-          <div className="absolute -right-14 -top-16 h-48 w-48 rounded-full border border-white/10" />
-          <div className="absolute -right-5 -top-7 h-32 w-32 rounded-full border border-white/10" />
-          <div className="relative">
-            <div className="mb-5 inline-flex rounded-xl bg-white/10 p-3">
-              <Home className="h-6 w-6" strokeWidth={1.6} />
+          <div className="absolute -right-7 -top-7 h-28 w-28 rounded-full border border-red-200/80" />
+          <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full border border-red-200/60" />
+
+          <div className="relative z-10">
+            <div className="mb-4 inline-flex rounded-xl bg-red-50 p-3 text-brand-darkRed shadow-sm">
+              <Home className="h-6 w-6" strokeWidth={1.7} />
             </div>
-            <p className="font-telugu text-xs font-semibold uppercase tracking-[0.18em] text-red-200">
-              చదువు, ఆనందించు, దాచుకో
+            <p className="font-telugu text-[10px] font-semibold uppercase tracking-[0.18em] text-red-600">
+              మీ ఇంటి సంచిక
             </p>
-            <h2 className="mt-2 font-telugu text-3xl font-bold leading-tight">
+            <h2 className="mt-2 font-telugu text-[2.1rem] leading-[1.1] text-brand-darkRed">
               స్వాతి
               <br />
               మీ ఇంటికి
             </h2>
-            <p className="mt-3 font-telugu text-sm leading-6 text-red-100">
+            <p className="mt-3 font-telugu text-sm leading-6 text-stone-600">
               43 ఏళ్లుగా తెలుగు కుటుంబాలతో కలిసి... మీకు ఇష్టమైన ప్రతి సంచిక నేరుగా మీ ఇంటికే.
             </p>
           </div>
-          <div className="relative mt-8">
+
+          <div className="relative z-10 mt-6">
             <a
               href="mailto:subscriptions@swati.in"
-              className="flex items-center justify-center gap-2 rounded-xl bg-white px-4 py-3 font-telugu text-sm font-bold text-brand-darkRed transition hover:bg-rose-50"
+              className="flex items-center justify-between gap-2 rounded-2xl bg-brand-crimson px-4 py-3 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.8)] transition hover:bg-brand-darkRed"
             >
               సభ్యత్వం పొందండి <ArrowRight className="h-4 w-4" />
             </a>
-            <div className="mt-6 grid grid-cols-3 gap-2 text-center text-[10px] font-medium text-red-100">
-              <span className="flex flex-col items-center gap-2"><Truck className="h-5 w-5" />మీ ఇంటికి</span>
-              <span className="flex flex-col items-center gap-2"><BookOpen className="h-5 w-5" />ప్రింట్ & డిజిటల్</span>
-              <span className="flex flex-col items-center gap-2"><Gift className="h-5 w-5" />ప్రత్యేక ఆఫర్లు</span>
+
+            <div className="mt-5 grid grid-cols-3 gap-2 text-center text-[9px] font-medium text-stone-600">
+              <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-white p-2">
+                <Truck className="h-4 w-4 text-brand-crimson" />
+                ఇంటికి
+              </span>
+              <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-white p-2">
+                <BookOpen className="h-4 w-4 text-brand-crimson" />
+                డిజిటల్
+              </span>
+              <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-white p-2">
+                <Gift className="h-4 w-4 text-brand-crimson" />
+                ఆఫర్లు
+              </span>
             </div>
           </div>
         </aside>
       </section>
 
-      <section>
+      <section className="special-section">
         <SectionHeading eyebrow="పాఠకుల కోసం" href="#stories">
           {specialSection?.sectionTitle || 'స్వాతి ప్రత్యేకం'}
         </SectionHeading>
@@ -416,7 +426,7 @@ function IndexComponent() {
           {specialItems.map((story, index) => (
             <article
               key={`${story.title}-${index}`}
-              className="group relative isolate flex h-64 flex-col justify-end overflow-hidden rounded-2xl bg-stone-800 p-5 text-white shadow-sm"
+              className="group relative isolate flex h-56 flex-col justify-end overflow-hidden rounded-2xl bg-stone-800 p-4 text-white shadow-sm sm:h-60"
             >
               <img
                 src={story.image}
@@ -435,18 +445,18 @@ function IndexComponent() {
         </div>
       </section>
 
-      <section id="stories">
+      <section id="stories" className="stories-section">
         <SectionHeading eyebrow="చదవండి · తెలుసుకోండి" href="#journey">
           {storiesSection?.sectionTitle || 'కథనాలు'}
         </SectionHeading>
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
           {storyItems.map((story, index) => (
             <a
               key={`${story.title}-${index}`}
               href="#current-issue"
-              className="group overflow-hidden rounded-xl border border-stone-200 bg-white transition hover:-translate-y-1 hover:shadow-lg"
+              className="group overflow-hidden transition hover:-translate-y-1 hover:shadow-lg"
             >
-              <div className="h-28 overflow-hidden bg-rose-50 sm:h-32">
+              <div className="h-24 overflow-hidden bg-rose-50 sm:h-28">
                 <img
                   src={story.image}
                   alt=""
@@ -465,91 +475,53 @@ function IndexComponent() {
         </div>
       </section>
 
-      <section
-        id="journey"
-        className="grid overflow-hidden rounded-2xl bg-[#f2e8dc] md:grid-cols-[0.85fr_1.15fr]"
-      >
-        <div className="flex flex-col justify-center p-7 sm:p-10">
-          <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-full bg-white text-brand-crimson shadow-sm">
-            <Sparkles className="h-5 w-5" />
-          </div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-crimson/70">
-            మన ప్రయాణం
-          </p>
-          <h2 className="mt-2 font-telugu text-3xl font-bold text-brand-darkRed sm:text-4xl">
-            {journeySection?.sectionTitle || 'మా 43 ఏళ్ల ప్రయాణం'}
-          </h2>
-          <p className="mt-2 text-2xl font-semibold tracking-[0.12em] text-stone-500">
-            {journeyTile?.title || '1984 — 2026'}
-          </p>
-          <p className="mt-4 max-w-md font-telugu text-sm leading-7 text-stone-600">
-            {journeyTile?.text ||
-              'తెలుగు కుటుంబాల ప్రేమాభిమానాలతో, కథలతో, జ్ఞాపకాలతో సాగుతున్న స్వాతి ప్రయాణం...'}
-          </p>
-          <a
-            href="#about"
-            className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-brand-crimson px-5 py-3 font-telugu text-sm font-bold text-white transition hover:bg-brand-darkRed"
-          >
-            మా ప్రయాణం గురించి <ArrowRight className="h-4 w-4" />
-          </a>
-        </div>
-        <div className="relative min-h-64 overflow-hidden bg-gradient-to-br from-brand-crimson to-amber-800 p-8 sm:min-h-80 sm:p-12">
-          <div className="absolute inset-0 opacity-25">
-            <div className="absolute -right-12 -top-24 h-80 w-80 rounded-full border border-white/50" />
-            <div className="absolute -right-2 -top-14 h-60 w-60 rounded-full border border-white/50" />
-            <div className="absolute bottom-[-110px] left-[-40px] h-72 w-72 rounded-full border border-white/30" />
-          </div>
-          <div className="relative flex h-full min-h-48 flex-col justify-end text-white">
-            <span className="font-serif text-[clamp(5rem,15vw,11rem)] font-bold leading-[0.8] text-white/15">
-              43
-            </span>
-            <div className="mt-5 border-l-2 border-white/70 pl-4">
-              {journeyTile?.image && (
-                <img
-                  src={journeyTile.image}
-                  alt=""
-                  className="absolute inset-0 -z-10 h-full w-full object-cover opacity-30"
-                />
-              )}
-              <p className="font-telugu text-2xl font-bold sm:text-3xl">
-                {journeyTile?.title || 'నాలుగు దశాబ్దాల కథలు'}
-              </p>
-              <p className="mt-2 max-w-lg font-telugu text-sm leading-6 text-white/80">
-                {journeyTile?.text || 'ప్రతి ఇంటిలోనూ ఒక కథ. ప్రతి సంచికలోనూ ఒక కొత్త అనుభూతి.'}
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
+      <div className="about-sections overflow-hidden rounded-xl border border-stone-200">
+        <section id="journey" className="about-hero flex min-h-[160px] items-center px-5 py-5 sm:px-8 sm:py-6">
+          <div className="max-w-sm">
 
-      <section id="about" className="grid gap-8 rounded-2xl border border-stone-200 bg-white p-6 sm:p-9 md:grid-cols-[0.8fr_1.2fr]">
-        <div>
-          <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-brand-crimson/70">మన గురించి</p>
-          <h2 className="mt-2 font-telugu text-3xl font-bold text-brand-darkRed">
-            {aboutSection?.sectionTitle || 'స్వాతి గురించి'}
-          </h2>
-          <p className="mt-3 font-telugu text-sm leading-7 text-stone-600">
-            {aboutTile?.text ||
-              'తెలుగు పాఠకుల అభిరుచులకు అద్దం పడుతూ, నమ్మకమైన కథనాలు మరియు స్ఫూర్తిదాయకమైన విషయాలను అందిస్తున్న కుటుంబ పత్రిక.'}
-          </p>
-          <a href="#subscribe" className="mt-5 inline-flex items-center gap-2 font-telugu text-sm font-bold text-brand-crimson hover:underline">
-            మాతో మాట్లాడండి <ArrowRight className="h-4 w-4" />
-          </a>
-        </div>
-        <div className="grid gap-3 sm:grid-cols-3">
-          {[
-            { icon: BookOpen, title: 'సాహిత్యం', text: 'కథలు, కవితలు, పుస్తక పరిచయాలు' },
-            { icon: MapPin, title: 'మన సంప్రదాయం', text: 'తెలుగు సంస్కృతి, జీవిత విశేషాలు' },
-            { icon: Gift, title: 'కుటుంబం', text: 'ప్రతి వయసు పాఠకుడికి ప్రత్యేకం' },
-          ].map(({ icon: Icon, title, text }) => (
-            <div key={title} className="rounded-xl bg-brand-warmBg p-4">
-              <Icon className="h-5 w-5 text-brand-crimson" />
-              <h3 className="mt-3 font-telugu text-sm font-bold text-stone-800">{title}</h3>
-              <p className="mt-1 font-telugu text-xs leading-5 text-stone-500">{text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-    </div>
+              <SectionHeading eyebrow="మన గురించి" href="#about">
+              {aboutSection?.sectionTitle || 'స్వాతి గురించి'}
+            </SectionHeading>
+            <p className="mt-3 font-telugu text-sm leading-6 text-stone-700">
+              {aboutTile?.title || aboutTile?.text ||
+                '43 సంవత్సరాలుగా తెలుగు కుటుంబాలతో కలిసి ప్రయాణిస్తున్న స్వాతి కథ...'}
+            </p>
+            <a
+              href="#about"
+              className="mt-3 inline-flex items-center gap-2 rounded-md bg-brand-crimson px-4 py-2 font-telugu text-xs font-bold text-white transition hover:bg-brand-darkRed"
+            >
+              మా గురించి తెలుసుకోండి <ArrowRight className="h-4 w-4" />
+            </a>
+          </div>
+        </section>
+
+        <section id="about" className="grid gap-4 border-t border-stone-200 px-5 py-4 sm:px-8 md:grid-cols-[1.15fr_2fr] md:items-center">
+          <div>
+             <SectionHeading eyebrow="మన గురించి" href="#about">
+              {aboutSection?.sectionDesc || 'సంప్రదించండి'}
+            </SectionHeading>
+            <p className="mt-2 font-telugu text-sm leading-6 text-stone-600">
+              మీ అభిప్రాయాలు, సూచనలు, సహకారం మాకు ఎంతో విలువైనవి.
+            </p>
+          </div>
+          <div className="grid gap-3 sm:grid-cols-3 sm:gap-0">
+            {[
+              { icon: PencilLine, title: 'సంపాదకీయం', text: 'కథలు, రచనలు, పాఠకుల కోసం' },
+              { icon: Megaphone, title: 'విజ్ఞాపన కోసం', text: 'ప్రకటనలు, బ్రాండ్ భాగస్వామ్యాలు' },
+              { icon: Mail, title: 'సాధారణ సమాచారం', text: 'ఇతర సమాచారం, సూచనలు' },
+            ].map(({ icon: Icon, title, text }) => (
+              <div key={title} className="flex items-start gap-3 border-stone-300 py-1 sm:border-l sm:px-4 sm:first:border-l-0">
+                <Icon className="mt-0.5 h-5 w-5 shrink-0 text-brand-crimson" />
+                <div>
+                  <h3 className="font-telugu text-sm font-bold text-stone-800">{title}</h3>
+                  <p className="mt-1 font-telugu text-xs leading-5 text-stone-500">{text}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
+      </div>
+
   )
 }

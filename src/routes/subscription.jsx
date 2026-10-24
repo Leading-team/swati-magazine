@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
-import { ArrowRight, Check, Loader2, ShieldCheck, Sparkles, X } from 'lucide-react'
+import { ArrowRight, Check, Loader2, ShieldCheck, Sparkles } from 'lucide-react'
 import { useState } from 'react'
 import {
   createSubscriptionCheckout,
@@ -44,21 +44,33 @@ const pageCopy = {
       ['డిజిటల్ సంచికలను ఎలా చదవాలి?', 'మా వెబ్‌సైట్‌లోని డిజిటల్ రీడర్‌లో మీ సంచికలను వెంటనే చదవవచ్చు.'],
       ['తర్వాత ప్లాన్‌ను మార్చుకోవచ్చా?', 'అవును. మీ సభ్యత్వాన్ని తర్వాత అప్‌గ్రేడ్ లేదా డౌన్‌గ్రేడ్ చేసుకోవచ్చు.'],
     ],
-    checkoutEyebrow: 'సురక్షిత చెల్లింపు',
-    checkoutTitle: 'మీ వివరాలు నమోదు చేయండి',
-    name: 'పూర్తి పేరు',
-    email: 'ఇమెయిల్',
-    phone: 'ఫోన్',
-    address: 'చిరునామా',
-    city: 'నగరం',
-    state: 'రాష్ట్రం',
-    postalCode: 'పిన్ కోడ్',
-    continuePayment: 'చెల్లింపుకు కొనసాగండి',
-    startingPayment: 'చెల్లింపు ప్రారంభమవుతోంది…',
-    securePayment: 'చెల్లింపును Razorpay సురక్షితంగా నిర్వహిస్తుంది.',
-    paymentSuccess: 'చెల్లింపు విజయవంతమైంది',
-    orderConfirmed: 'మీ ఆర్డర్',
-    confirmed: 'నిర్ధారించబడింది.',
+    checkoutEyebrow: 'Secure checkout',
+    checkoutTitle: 'Your cart',
+    deliveryAddress: 'Delivery address',
+    addressPrompt: 'Where should we deliver your subscription?',
+    orderSummary: 'Order summary',
+    deliveryTo: 'Delivery to',
+    total: 'Total',
+    amountToPay: 'Amount to be paid',
+    paySecurely: 'Pay securely',
+    backToPlans: 'Back to plans',
+    cartStep: 'Cart',
+    addressStep: 'Address',
+    paymentStep: 'Payment',
+    courier: 'Courier',
+    name: 'Full name',
+    email: 'Email address',
+    phone: 'Phone number',
+    address: 'Address',
+    city: 'City',
+    state: 'State / Province',
+    postalCode: 'Postal code',
+    checkoutCountry: 'Country',
+    startingPayment: 'Starting payment…',
+    securePayment: 'Your payment is securely handled by Razorpay.',
+    paymentSuccess: 'Payment successful',
+    orderConfirmed: 'Your order',
+    confirmed: 'has been confirmed.',
   },
   en: {
     eyebrow: 'Swati at your home',
@@ -90,7 +102,19 @@ const pageCopy = {
       ['Can I change plans later?', 'Yes. You can upgrade or downgrade your subscription later.'],
     ],
     checkoutEyebrow: 'Secure payment',
-    checkoutTitle: 'Enter your details',
+    checkoutTitle: 'Your cart',
+    deliveryAddress: 'Delivery address',
+    addressPrompt: 'Where should we deliver your subscription?',
+    orderSummary: 'Order summary',
+    deliveryTo: 'Delivery to',
+    total: 'Total',
+    amountToPay: 'Amount to be paid',
+    paySecurely: 'Pay securely',
+    backToPlans: 'Back to plans',
+    cartStep: 'Cart',
+    addressStep: 'Address',
+    paymentStep: 'Payment',
+    courier: 'Courier',
     name: 'Full name',
     email: 'Email address',
     phone: 'Phone number',
@@ -98,7 +122,7 @@ const pageCopy = {
     city: 'City',
     state: 'State',
     postalCode: 'Postal code',
-    continuePayment: 'Continue to payment',
+    checkoutCountry: 'Country',
     startingPayment: 'Starting payment…',
     securePayment: 'Your payment is securely handled by Razorpay.',
     paymentSuccess: 'Payment successful',
@@ -217,7 +241,7 @@ function SubscriptionPage() {
     const email = String(formData.get('email') || '').trim()
     const phone = String(formData.get('phone') || '').trim()
     if (!fullName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !phone) {
-      setCheckoutError('దయచేసి మీ పేరు, సరైన ఇమెయిల్, ఫోన్ నంబర్ నమోదు చేయండి.')
+      setCheckoutError('Please enter your name, a valid email address, and phone number.')
       return
     }
 
@@ -227,7 +251,7 @@ function SubscriptionPage() {
     const hasCourier = Number.isFinite(courierPrice) && courierPrice > 0
     const amount = subscriptionPrice + (hasCourier ? courierPrice : 0)
     if (!Number.isFinite(subscriptionPrice) || subscriptionPrice <= 0 || !Number.isFinite(amount)) {
-      setCheckoutError('ఈ ప్లాన్‌కు ధర అందుబాటులో లేదు. మరొక ప్లాన్‌ను ఎంచుకోండి.')
+      setCheckoutError('Pricing is unavailable for this plan. Please choose another plan.')
       return
     }
 
@@ -290,7 +314,7 @@ function SubscriptionPage() {
             setSelectedOffer(null)
           } catch (error) {
             setCheckoutError(
-              error instanceof Error ? error.message : 'చెల్లింపును నిర్ధారించలేకపోయాము.',
+              error instanceof Error ? error.message : 'Unable to verify the payment.',
             )
           } finally {
             setIsCheckingOut(false)
@@ -304,60 +328,62 @@ function SubscriptionPage() {
 
       razorpay.on('payment.failed', (result) => {
         setCheckoutError(
-          result.error?.description || 'చెల్లింపు విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.',
+          result.error?.description || 'Payment failed. Please try again.',
         )
         setIsCheckingOut(false)
       })
       razorpay.open()
     } catch (error) {
-      setCheckoutError(error instanceof Error ? error.message : 'చెల్లింపును ప్రారంభించలేకపోయాము.')
+      setCheckoutError(error instanceof Error ? error.message : 'Unable to start the payment.')
       setIsCheckingOut(false)
     }
   }
 
   return (
     <div className="mx-auto max-w-7xl space-y-12 py-2 sm:py-5">
-      <section className="relative overflow-hidden rounded-2xl bg-brand-darkRed px-6 py-10 text-white sm:px-10 sm:py-14">
-        <div className="absolute -right-12 -top-20 h-72 w-72 rounded-full border border-white/10" />
-        <div className="absolute -right-1 -top-10 h-52 w-52 rounded-full border border-white/10" />
-        <div className="relative max-w-3xl">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-red-200">{copy.eyebrow}</p>
-          <h1 className="font-telugu text-3xl font-bold leading-tight sm:text-5xl">
-            {copy.title}
-          </h1>
-          <p className="mt-4 max-w-2xl font-telugu text-sm leading-7 text-red-100 sm:text-base">
-            {copy.description}
-          </p>
-          <div className="mt-6 flex flex-wrap items-center gap-4">
-            <label className="flex items-center gap-2 font-telugu text-sm">
-              {copy.language}
-              <select
-                value={language}
-                onChange={(event) => setLanguage(event.target.value)}
-                className="rounded-md border border-white/30 bg-white px-3 py-2 text-sm text-stone-900"
-              >
-                <option value="te">తెలుగు</option>
-                <option value="en">English</option>
-              </select>
-            </label>
-            <label className="flex items-center gap-2 font-telugu text-sm">
-              {copy.country}
-              <select
-                value={country?.country_id ?? ''}
-                onChange={(event) => setCountryId(event.target.value)}
-                className="max-w-56 rounded-md border border-white/30 bg-white px-3 py-2 text-sm text-stone-900"
-                disabled={countries.length === 0}
-              >
-                {countries.map((item) => (
-                  <option key={item.country_id} value={item.country_id}>
-                    {getCountryName(item.countrycode)} ({item.currency})
-                  </option>
-                ))}
-              </select>
-            </label>
+      {!selectedOffer && (
+        <section className="relative overflow-hidden rounded-2xl bg-brand-darkRed px-6 py-10 text-white sm:px-10 sm:py-14">
+          <div className="absolute -right-12 -top-20 h-72 w-72 rounded-full border border-white/10" />
+          <div className="absolute -right-1 -top-10 h-52 w-52 rounded-full border border-white/10" />
+          <div className="relative max-w-3xl">
+            <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-red-200">{copy.eyebrow}</p>
+            <h1 className="font-telugu text-3xl font-bold leading-tight sm:text-5xl">
+              {copy.title}
+            </h1>
+            <p className="mt-4 max-w-2xl font-telugu text-sm leading-7 text-red-100 sm:text-base">
+              {copy.description}
+            </p>
+            <div className="mt-6 flex flex-wrap items-center gap-4">
+              <label className="flex items-center gap-2 font-telugu text-sm">
+                {copy.language}
+                <select
+                  value={language}
+                  onChange={(event) => setLanguage(event.target.value)}
+                  className="rounded-md border border-white/30 bg-white px-3 py-2 text-sm text-stone-900"
+                >
+                  <option value="te">తెలుగు</option>
+                  <option value="en">English</option>
+                </select>
+              </label>
+              <label className="flex items-center gap-2 font-telugu text-sm">
+                {copy.country}
+                <select
+                  value={country?.country_id ?? ''}
+                  onChange={(event) => setCountryId(event.target.value)}
+                  className="max-w-56 rounded-md border border-white/30 bg-white px-3 py-2 text-sm text-stone-900"
+                  disabled={countries.length === 0}
+                >
+                  {countries.map((item) => (
+                    <option key={item.country_id} value={item.country_id}>
+                      {getCountryName(item.countrycode)} ({item.currency})
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {loading ? (
         <div role="status" className="flex items-center justify-center gap-3 py-16 text-stone-600">
@@ -376,6 +402,168 @@ function SubscriptionPage() {
         <p className="rounded-xl border border-stone-200 bg-white p-6 text-center text-stone-600">
           {copy.noPlans}
         </p>
+      ) : selectedOffer ? (
+        <section aria-labelledby="checkout-title" className="overflow-hidden rounded-xl border border-stone-200 bg-white">
+          <div className="flex flex-wrap items-center justify-between gap-5 border-b border-stone-200 px-5 py-5 sm:px-8">
+            <div>
+              <p className="font-telugu text-xs font-bold uppercase tracking-widest text-brand-crimson">
+                <ShieldCheck className="mr-1 inline h-4 w-4" />
+                {copy.checkoutEyebrow}
+              </p>
+              <h2 id="checkout-title" className="mt-1 font-telugu text-2xl font-bold text-stone-900">
+                {copy.checkoutTitle}
+              </h2>
+            </div>
+            <ol aria-label="Checkout progress" className="flex items-center gap-2 text-xs font-semibold text-stone-500 sm:gap-3">
+              {[copy.cartStep, copy.addressStep, copy.paymentStep].map((step, index) => (
+                <li key={step} className="flex items-center gap-2">
+                  <span className={`flex h-6 w-6 items-center justify-center rounded-full text-[11px] ${
+                    index < 2 ? 'bg-brand-crimson text-white' : 'border border-stone-300 text-stone-500'
+                  }`}>
+                    {index + 1}
+                  </span>
+                  <span className={index < 2 ? 'text-brand-crimson' : ''}>{step}</span>
+                  {index < 2 && <span aria-hidden="true" className="h-px w-4 bg-stone-300 sm:w-6" />}
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <form onSubmit={startPayment} className="grid gap-5 p-4 sm:p-6 lg:grid-cols-[minmax(0,1.8fr)_minmax(260px,0.9fr)] lg:items-start">
+            <section className="rounded-lg border border-stone-200 p-4 sm:p-5" aria-labelledby="delivery-address-title">
+              <h3 id="delivery-address-title" className="font-telugu text-lg font-bold text-stone-900">
+                {copy.deliveryAddress}
+              </h3>
+              <p className="mt-1 font-telugu text-sm text-stone-500">{copy.addressPrompt}</p>
+
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                <label className="grid gap-1 text-xs font-medium text-stone-700">
+                  {copy.name}
+                  <input name="fullName" autoComplete="name" required className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                </label>
+                <label className="grid gap-1 text-xs font-medium text-stone-700">
+                  {copy.email}
+                  <input name="email" type="email" autoComplete="email" required className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                </label>
+                <label className="grid gap-1 text-xs font-medium text-stone-700 sm:col-span-2">
+                  {copy.phone}
+                  <input name="phone" type="tel" autoComplete="tel" required className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                </label>
+                <label className="grid gap-1 text-xs font-medium text-stone-700 sm:col-span-2">
+                  {copy.address}
+                  <textarea name="address" autoComplete="street-address" rows={2} className="rounded-md border border-stone-300 bg-stone-50 px-3 py-2 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                </label>
+                <label className="grid gap-1 text-xs font-medium text-stone-700">
+                  {copy.city}
+                  <input name="city" autoComplete="address-level2" className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                </label>
+                <label className="grid gap-1 text-xs font-medium text-stone-700">
+                  {copy.state}
+                  <input name="state" autoComplete="address-level1" className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                </label>
+                <label className="grid gap-1 text-xs font-medium text-stone-700">
+                  {copy.postalCode}
+                  <input name="postalCode" autoComplete="postal-code" className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                </label>
+                <label className="grid gap-1 text-xs font-medium text-stone-700">
+                  {copy.checkoutCountry}
+                  <input value={getCountryName(country.countrycode)} readOnly className="h-10 rounded-md border border-stone-300 bg-stone-100 px-3 text-sm text-stone-600" />
+                </label>
+              </div>
+
+              {checkoutError && (
+                <p role="alert" className="mt-4 rounded-md bg-red-50 p-3 text-sm text-red-800">
+                  {checkoutError}
+                </p>
+              )}
+              <div className="mt-4 border-t border-stone-200 pt-4">
+                <div className="mb-3 flex items-center justify-between font-telugu text-sm font-semibold text-stone-800">
+                  <span>{copy.amountToPay}</span>
+                  <span>{formatPrice(
+                    Number(selectedOffer.plan.Price) +
+                      (Number(selectedOffer.plan.Courier_Price) > 0
+                        ? Number(selectedOffer.plan.Courier_Price)
+                        : 0),
+                    country,
+                  )}</span>
+                </div>
+                <button
+                  type="submit"
+                  disabled={isCheckingOut}
+                  className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-brand-crimson px-4 py-3 font-telugu text-sm font-bold text-white hover:bg-brand-darkRed disabled:cursor-wait disabled:opacity-70"
+                >
+                  {isCheckingOut ? (
+                    <><Loader2 className="h-4 w-4 animate-spin" /> {copy.startingPayment}</>
+                  ) : (
+                    <>{copy.paySecurely} · {formatPrice(
+                      Number(selectedOffer.plan.Price) +
+                        (Number(selectedOffer.plan.Courier_Price) > 0
+                          ? Number(selectedOffer.plan.Courier_Price)
+                          : 0),
+                      country,
+                    )}<ArrowRight className="h-4 w-4" /></>
+                  )}
+                </button>
+                <p className="mt-3 text-center text-xs text-stone-500">{copy.securePayment}</p>
+              </div>
+            </section>
+
+            <aside className="rounded-lg border border-stone-200 p-4 sm:p-5" aria-labelledby="order-summary-title">
+              <h3 id="order-summary-title" className="font-telugu text-lg font-bold text-stone-900">
+                {copy.orderSummary}
+              </h3>
+              {Number(selectedOffer.plan.Courier_Price) > 0 && (
+                <p className="mt-3 rounded-full bg-stone-100 px-3 py-1 text-center text-xs text-stone-600">
+                  {copy.deliveryTo} {getCountryName(country.countrycode)}
+                </p>
+              )}
+              <div className="mt-4 border-b border-stone-200 pb-4">
+                <p className="font-telugu text-sm font-semibold text-stone-800">{selectedOffer.offer.Title}</p>
+                <p className="mt-1 text-xs text-stone-500">{selectedOffer.plan.PlanName}</p>
+              </div>
+              <dl className="space-y-3 py-4 text-sm">
+                <div className="flex items-start justify-between gap-3">
+                  <dt className="font-telugu text-stone-600">
+                    {selectedOffer.offer.Title} - {selectedOffer.plan.PlanName}
+                  </dt>
+                  <dd className="shrink-0 font-medium text-stone-800">
+                    {formatPrice(Number(selectedOffer.plan.Price), country)}
+                  </dd>
+                </div>
+                {Number(selectedOffer.plan.Courier_Price) > 0 && (
+                  <div className="flex items-center justify-between gap-3">
+                    <dt className="font-telugu text-stone-600">{copy.courier}</dt>
+                    <dd className="shrink-0 font-medium text-stone-800">
+                      {formatPrice(Number(selectedOffer.plan.Courier_Price), country)}
+                    </dd>
+                  </div>
+                )}
+              </dl>
+              <div className="flex items-center justify-between border-t border-stone-200 pt-4 font-telugu font-bold text-stone-900">
+                <span>{copy.total}</span>
+                <span>{formatPrice(
+                  Number(selectedOffer.plan.Price) +
+                    (Number(selectedOffer.plan.Courier_Price) > 0
+                      ? Number(selectedOffer.plan.Courier_Price)
+                      : 0),
+                  country,
+                )}</span>
+              </div>
+              <p className="mt-4 text-center text-[11px] text-stone-500">{copy.securePayment}</p>
+            </aside>
+
+            <div className="lg:col-span-2">
+              <button
+                type="button"
+                disabled={isCheckingOut}
+                onClick={() => setSelectedOffer(null)}
+                className="font-telugu text-sm font-semibold text-brand-crimson hover:underline disabled:opacity-50"
+              >
+                {copy.backToPlans}
+              </button>
+            </div>
+          </form>
+        </section>
       ) : (
         <section aria-label="Subscription plans">
           <div className="mb-6 text-center">
@@ -516,119 +704,20 @@ function SubscriptionPage() {
         </div>
       )}
 
-      <section className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-8">
-        <h2 className="font-telugu text-2xl font-bold text-stone-900">{copy.faqTitle}</h2>
-        <div className="mt-5 grid gap-6 sm:grid-cols-2">
-          {copy.faqs.map(([question, answer]) => (
-          <article key={question}>
-            <h3 className="font-telugu font-bold text-stone-800">{question}</h3>
-            <p className="mt-2 font-telugu text-sm leading-6 text-stone-600">{answer}</p>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      {selectedOffer && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-stone-950/60 p-4"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget && !isCheckingOut) setSelectedOffer(null)
-          }}
-        >
-          <section
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="checkout-title"
-            className="my-auto w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl sm:p-8"
-          >
-            <div className="flex items-start justify-between gap-4">
-              <div>
-                <p className="font-telugu text-xs font-bold uppercase tracking-widest text-brand-crimson">
-                  <ShieldCheck className="mr-1 inline h-4 w-4" />
-                  {copy.checkoutEyebrow}
-                </p>
-                <h2 id="checkout-title" className="mt-2 font-telugu text-2xl font-bold text-stone-900">
-                  {copy.checkoutTitle}
-                </h2>
-                <p className="mt-1 text-sm text-stone-600">
-                  {selectedOffer.offer.Title} · {selectedOffer.plan.PlanName}
-                </p>
-              </div>
-              <button
-                type="button"
-                aria-label="Close checkout"
-                disabled={isCheckingOut}
-                onClick={() => setSelectedOffer(null)}
-                className="rounded-full p-2 text-stone-500 hover:bg-stone-100 disabled:opacity-50"
-              >
-                <X className="h-5 w-5" />
-              </button>
-            </div>
-
-            <form onSubmit={startPayment} className="mt-6 space-y-3">
-              <label className="grid gap-1 text-sm font-medium text-stone-700">
-                {copy.name}
-                <input name="fullName" autoComplete="name" required className="h-10 rounded-md border border-stone-300 px-3" />
-              </label>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="grid gap-1 text-sm font-medium text-stone-700">
-                  {copy.email}
-                  <input name="email" type="email" autoComplete="email" required className="h-10 rounded-md border border-stone-300 px-3" />
-                </label>
-                <label className="grid gap-1 text-sm font-medium text-stone-700">
-                  {copy.phone}
-                  <input name="phone" type="tel" autoComplete="tel" required className="h-10 rounded-md border border-stone-300 px-3" />
-                </label>
-              </div>
-              <label className="grid gap-1 text-sm font-medium text-stone-700">
-                {copy.address}
-                <input name="address" autoComplete="street-address" className="h-10 rounded-md border border-stone-300 px-3" />
-              </label>
-              <div className="grid gap-3 sm:grid-cols-2">
-                <label className="grid gap-1 text-sm font-medium text-stone-700">
-                  {copy.city}
-                  <input name="city" autoComplete="address-level2" className="h-10 rounded-md border border-stone-300 px-3" />
-                </label>
-                <label className="grid gap-1 text-sm font-medium text-stone-700">
-                  {copy.state}
-                  <input name="state" autoComplete="address-level1" className="h-10 rounded-md border border-stone-300 px-3" />
-                </label>
-              </div>
-              <label className="grid gap-1 text-sm font-medium text-stone-700">
-                {copy.postalCode}
-                <input name="postalCode" autoComplete="postal-code" className="h-10 rounded-md border border-stone-300 px-3" />
-              </label>
-
-              {checkoutError && (
-                <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-800">
-                  {checkoutError}
-                </p>
-              )}
-              <button
-                type="submit"
-                disabled={isCheckingOut}
-                className="mt-2 inline-flex w-full items-center justify-center gap-2 rounded-lg bg-brand-crimson px-4 py-3 font-telugu text-sm font-bold text-white hover:bg-brand-darkRed disabled:cursor-wait disabled:opacity-70"
-              >
-                {isCheckingOut ? (
-                  <><Loader2 className="h-4 w-4 animate-spin" /> {copy.startingPayment}</>
-                ) : (
-                  <>{copy.continuePayment} · {formatPrice(
-                    Number(selectedOffer.plan.Price) +
-                      (Number(selectedOffer.plan.Courier_Price) > 0
-                        ? Number(selectedOffer.plan.Courier_Price)
-                        : 0),
-                    country,
-                  )}<ArrowRight className="h-4 w-4" /></>
-                )}
-              </button>
-              <p className="text-center text-xs text-stone-500">
-                {copy.securePayment}
-              </p>
-            </form>
-          </section>
-        </div>
+      {!selectedOffer && (
+        <section className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-8">
+          <h2 className="font-telugu text-2xl font-bold text-stone-900">{copy.faqTitle}</h2>
+          <div className="mt-5 grid gap-6 sm:grid-cols-2">
+            {copy.faqs.map(([question, answer]) => (
+              <article key={question}>
+                <h3 className="font-telugu font-bold text-stone-800">{question}</h3>
+                <p className="mt-2 font-telugu text-sm leading-6 text-stone-600">{answer}</p>
+              </article>
+            ))}
+          </div>
+        </section>
       )}
+
     </div>
   )
 }

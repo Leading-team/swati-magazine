@@ -11,3 +11,53 @@ body {
 html {
   scroll-behavior: smooth;
 }
+
+.hero {
+  min-height: 326px;
+  width: calc(100% + 2.5rem);
+  margin-inline: -1.25rem;
+  padding: 8px clamp(20px, 4vw, 54px);
+  grid-template-columns: 1.15fr .82fr .88fr;
+  gap: clamp(12px, 2vw, 26px);
+  background:
+   linear-gradient(90deg, rgba(255,255,255,.06), rgba(255,250,241,.88) 43%, rgba(255,250,241,.88) 100%),
+    url("./assets/edition-bg.jpg") center/cover;
+  align-items: center;
+}
+
+.special-section {
+  border-radius: 0.75rem;
+  background-color: #f8f0e6;
+  padding: 1rem;
+}
+
+.stories-section {
+  border-radius: 0.75rem;
+  background-color: #fcf8f2;
+  padding: 1rem;
+}
+
+.about-hero {
+  background:
+    linear-gradient(90deg, rgba(253, 250, 246, .97) 0%, rgba(253, 250, 246, .91) 32%, rgba(253, 250, 246, .12) 68%),
+    url("./assets/aboutus_img.png") center 55% / cover;
+}
+
+.about-sections {
+  background-color: #fbf7f1;
+}
+
+@media (min-width: 640px) {
+  .special-section,
+  .stories-section {
+    padding: 1.25rem 1.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .about-hero {
+    background:
+      linear-gradient(90deg, rgba(253, 250, 246, .94) 0%, rgba(253, 250, 246, .84) 65%, rgba(253, 250, 246, .42) 100%),
+      url("./assets/aboutus_img.png") center / cover;
+  }
+}

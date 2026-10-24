@@ -12,7 +12,7 @@ function RootComponent() {
     <div className="min-h-screen flex flex-col bg-brand-warmBg">
       <SiteHeader />
 
-      <main className="mx-auto w-full max-w-7xl flex-grow px-5 py-8 sm:py-10">
+      <main className="mx-auto w-full max-w-7xl flex-grow px-5">
         <Outlet />
       </main>
 
