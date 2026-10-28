@@ -33,7 +33,7 @@ export function SiteHeader() {
     error,
   } = useQuery<MenuItem[]>({
     queryKey: ['menus', language],
-    queryFn: ({ signal }) => getAllMenus({ language, signal }),
+    queryFn: () => getAllMenus({ language }),
     retry: false,
     staleTime: 5 * 60 * 1000,
   })

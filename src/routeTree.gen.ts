@@ -10,11 +10,41 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as EditionsRouteImport } from './routes/editions'
+import { Route as InspirationsRouteImport } from './routes/inspirations'
+import { Route as JourneyRouteImport } from './routes/journey'
+import { Route as SpecialRouteImport } from './routes/special'
 import { Route as SubscriptionRouteImport } from './routes/subscription'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EditionsRoute = EditionsRouteImport.update({
+  id: '/editions',
+  path: '/editions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InspirationsRoute = InspirationsRouteImport.update({
+  id: '/inspirations',
+  path: '/inspirations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JourneyRoute = JourneyRouteImport.update({
+  id: '/journey',
+  path: '/journey',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpecialRoute = SpecialRouteImport.update({
+  id: '/special',
+  path: '/special',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SubscriptionRoute = SubscriptionRouteImport.update({
@@ -25,27 +55,69 @@ const SubscriptionRoute = SubscriptionRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/editions': typeof EditionsRoute
+  '/inspirations': typeof InspirationsRoute
+  '/journey': typeof JourneyRoute
+  '/special': typeof SpecialRoute
   '/subscription': typeof SubscriptionRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/editions': typeof EditionsRoute
+  '/inspirations': typeof InspirationsRoute
+  '/journey': typeof JourneyRoute
+  '/special': typeof SpecialRoute
   '/subscription': typeof SubscriptionRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/editions': typeof EditionsRoute
+  '/inspirations': typeof InspirationsRoute
+  '/journey': typeof JourneyRoute
+  '/special': typeof SpecialRoute
   '/subscription': typeof SubscriptionRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/subscription'
+  fullPaths:
+    | '/'
+    | '/contact'
+    | '/editions'
+    | '/inspirations'
+    | '/journey'
+    | '/special'
+    | '/subscription'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/subscription'
-  id: '__root__' | '/' | '/subscription'
+  to:
+    | '/'
+    | '/contact'
+    | '/editions'
+    | '/inspirations'
+    | '/journey'
+    | '/special'
+    | '/subscription'
+  id:
+    | '__root__'
+    | '/'
+    | '/contact'
+    | '/editions'
+    | '/inspirations'
+    | '/journey'
+    | '/special'
+    | '/subscription'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactRoute: typeof ContactRoute
+  EditionsRoute: typeof EditionsRoute
+  InspirationsRoute: typeof InspirationsRoute
+  JourneyRoute: typeof JourneyRoute
+  SpecialRoute: typeof SpecialRoute
   SubscriptionRoute: typeof SubscriptionRoute
 }
 
@@ -56,6 +128,41 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/editions': {
+      id: '/editions'
+      path: '/editions'
+      fullPath: '/editions'
+      preLoaderRoute: typeof EditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/inspirations': {
+      id: '/inspirations'
+      path: '/inspirations'
+      fullPath: '/inspirations'
+      preLoaderRoute: typeof InspirationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journey': {
+      id: '/journey'
+      path: '/journey'
+      fullPath: '/journey'
+      preLoaderRoute: typeof JourneyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/special': {
+      id: '/special'
+      path: '/special'
+      fullPath: '/special'
+      preLoaderRoute: typeof SpecialRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/subscription': {
@@ -70,6 +177,11 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactRoute: ContactRoute,
+  EditionsRoute: EditionsRoute,
+  InspirationsRoute: InspirationsRoute,
+  JourneyRoute: JourneyRoute,
+  SpecialRoute: SpecialRoute,
   SubscriptionRoute: SubscriptionRoute,
 }
 export const routeTree = rootRouteImport
