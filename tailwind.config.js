@@ -14,7 +14,7 @@ export default {
         }
       },
       fontFamily: {
-        telugu: ['Noto Serif Telugu', 'Georgia', 'serif'],
+        telugu: ['Noto Sans Telugu', 'Segoe UI', 'sans-serif'],
       }
     },
   },

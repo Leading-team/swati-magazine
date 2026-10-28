@@ -1,7 +1,7 @@
 import { createFileRoute } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { ArrowRight, Check, Loader2, ShieldCheck, Sparkles } from 'lucide-react'
-import { useState } from 'react'
+import { useState, type FormEvent } from 'react'
 import {
   createSubscriptionCheckout,
   getSubscriptionCountries,
@@ -9,6 +9,72 @@ import {
   getSubscriptionOffers,
   verifySubscriptionPayment,
 } from '../lib/subscriptionApi'
+
+type SubscriptionPlan = {
+  PlanName: string
+  Price: string | number
+  Courier_Price?: string | number | null
+}
+
+type SubscriptionOffer = {
+  Title: string
+  Plans?: SubscriptionPlan[]
+}
+
+type SubscriptionCountry = {
+  active: boolean
+  country_id: string | number
+  countrycode?: string
+  symbol?: string
+  currency?: string
+}
+
+type SubscriptionLanguage = {
+  active: boolean
+  language_id: string | number
+  code: string
+  description: string
+}
+
+type SelectedOffer = {
+  offer: SubscriptionOffer
+  plan: SubscriptionPlan
+  languageCode?: string
+}
+
+type RazorpayPayment = {
+  razorpay_order_id: string
+  razorpay_payment_id: string
+  razorpay_signature: string
+}
+
+type RazorpayOptions = {
+  key: string
+  order_id: string
+  amount: number
+  currency: string
+  name: string
+  description: string
+  prefill: { name: string; email: string; contact: string }
+  handler: (payment: RazorpayPayment) => void | Promise<void>
+  modal: { ondismiss: () => void }
+  theme: { color: string }
+}
+
+type RazorpayPaymentFailure = {
+  error?: { description?: string }
+}
+
+type RazorpayInstance = {
+  on: (event: 'payment.failed', handler: (result: RazorpayPaymentFailure) => void) => void
+  open: () => void
+}
+
+declare global {
+  interface Window {
+    Razorpay?: new (options: RazorpayOptions) => RazorpayInstance
+  }
+}
 
 export const Route = createFileRoute('/subscription')({
   component: SubscriptionPage,
@@ -131,9 +197,9 @@ const pageCopy = {
   },
 }
 
-let razorpayScriptPromise
+let razorpayScriptPromise: Promise<void> | undefined
 
-function loadRazorpay() {
+function loadRazorpay(): Promise<void> {
   if (window.Razorpay) return Promise.resolve()
   if (razorpayScriptPromise) return razorpayScriptPromise
 
@@ -159,14 +225,14 @@ function loadRazorpay() {
   return razorpayScriptPromise
 }
 
-function formatPrice(amount, country) {
+function formatPrice(amount: number, country?: SubscriptionCountry) {
   if (!country) return ''
   return `${country.symbol || country.currency}${new Intl.NumberFormat('en-IN', {
     maximumFractionDigits: 2,
   }).format(amount)}`
 }
 
-function getCountryName(code) {
+function getCountryName(code?: string) {
   const regionCode = code?.trim().toUpperCase() === 'IND' ? 'IN' : code?.trim()
   if (!regionCode) return 'Country'
 
@@ -177,7 +243,7 @@ function getCountryName(code) {
   }
 }
 
-function getPlanEdition(title) {
+function getPlanEdition(title: string): 'weekly' | 'monthly' | undefined {
   const normalized = title.toLowerCase()
   if (normalized.includes('weekly')) return 'weekly'
   if (normalized.includes('monthly')) return 'monthly'
@@ -185,29 +251,29 @@ function getPlanEdition(title) {
 }
 
 function SubscriptionPage() {
-  const [language, setLanguage] = useState('te')
+  const [language, setLanguage] = useState<'te' | 'en'>('te')
   const [countryId, setCountryId] = useState('')
-  const [selectedTerms, setSelectedTerms] = useState({})
+  const [selectedTerms, setSelectedTerms] = useState<Record<number, string>>({})
   const [selectedLanguageCode, setSelectedLanguageCode] = useState('en')
-  const [selectedOffer, setSelectedOffer] = useState(null)
+  const [selectedOffer, setSelectedOffer] = useState<SelectedOffer | null>(null)
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [checkoutError, setCheckoutError] = useState('')
   const [successOrder, setSuccessOrder] = useState('')
   const copy = pageCopy[language]
 
-  const offersQuery = useQuery({
+  const offersQuery = useQuery<SubscriptionOffer[]>({
     queryKey: ['subscriptionOffers', language],
     queryFn: ({ signal }) => getSubscriptionOffers(language, { signal }),
     retry: false,
     staleTime: 5 * 60 * 1000,
   })
-  const countriesQuery = useQuery({
+  const countriesQuery = useQuery<SubscriptionCountry[]>({
     queryKey: ['subscriptionCountries'],
     queryFn: ({ signal }) => getSubscriptionCountries({ signal }),
     retry: false,
     staleTime: 30 * 60 * 1000,
   })
-  const languagesQuery = useQuery({
+  const languagesQuery = useQuery<SubscriptionLanguage[]>({
     queryKey: ['subscriptionLanguages'],
     queryFn: ({ signal }) => getSubscriptionLanguages({ signal }),
     retry: false,
@@ -223,7 +289,7 @@ function SubscriptionPage() {
   const loading = offersQuery.isLoading || countriesQuery.isLoading
   const pageError = offersQuery.error || countriesQuery.error
 
-  function chooseOffer(offer, plan, offerIndex) {
+  function chooseOffer(offer: SubscriptionOffer, plan: SubscriptionPlan, offerIndex: number) {
     setCheckoutError('')
     setSelectedOffer({
       offer,
@@ -232,7 +298,7 @@ function SubscriptionPage() {
     })
   }
 
-  async function startPayment(event) {
+  async function startPayment(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     if (!selectedOffer || !country) return
 
@@ -305,7 +371,7 @@ function SubscriptionPage() {
         name: 'Swati Publications',
         description: `${offer.Title} - ${plan.PlanName}`,
         prefill: { name: fullName, email, contact: phone },
-        handler: async (payment) => {
+        handler: async (payment: RazorpayPayment) => {
           setIsCheckingOut(true)
           setCheckoutError('')
           try {
@@ -326,7 +392,7 @@ function SubscriptionPage() {
         theme: { color: '#8b1e24' },
       })
 
-      razorpay.on('payment.failed', (result) => {
+      razorpay.on('payment.failed', (result: RazorpayPaymentFailure) => {
         setCheckoutError(
           result.error?.description || 'Payment failed. Please try again.',
         )
@@ -340,49 +406,58 @@ function SubscriptionPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl space-y-12 py-2 sm:py-5">
+    <div className="mx-auto max-w-7xl space-y-8 py-2 sm:py-5 px-6">
       {!selectedOffer && (
-        <section className="relative overflow-hidden rounded-2xl bg-brand-darkRed px-6 py-10 text-white sm:px-10 sm:py-14">
-          <div className="absolute -right-12 -top-20 h-72 w-72 rounded-full border border-white/10" />
-          <div className="absolute -right-1 -top-10 h-52 w-52 rounded-full border border-white/10" />
-          <div className="relative max-w-3xl">
-            <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-red-200">{copy.eyebrow}</p>
-            <h1 className="font-telugu text-3xl font-bold leading-tight sm:text-5xl">
-              {copy.title}
-            </h1>
-            <p className="mt-4 max-w-2xl font-telugu text-sm leading-7 text-red-100 sm:text-base">
-              {copy.description}
-            </p>
-            <div className="mt-6 flex flex-wrap items-center gap-4">
-              <label className="flex items-center gap-2 font-telugu text-sm">
-                {copy.language}
-                <select
-                  value={language}
-                  onChange={(event) => setLanguage(event.target.value)}
-                  className="rounded-md border border-white/30 bg-white px-3 py-2 text-sm text-stone-900"
-                >
-                  <option value="te">తెలుగు</option>
-                  <option value="en">English</option>
-                </select>
-              </label>
-              <label className="flex items-center gap-2 font-telugu text-sm">
-                {copy.country}
-                <select
-                  value={country?.country_id ?? ''}
-                  onChange={(event) => setCountryId(event.target.value)}
-                  className="max-w-56 rounded-md border border-white/30 bg-white px-3 py-2 text-sm text-stone-900"
-                  disabled={countries.length === 0}
-                >
-                  {countries.map((item) => (
-                    <option key={item.country_id} value={item.country_id}>
-                      {getCountryName(item.countrycode)} ({item.currency})
-                    </option>
-                  ))}
-                </select>
-              </label>
+        <>
+          <section className="border border-[#e5c9a7] border-l-[7px] bg-white px-5 py-6 sm:px-8 sm:py-7 lg:px-12">
+            <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-8">
+              <div>
+                <p className="mb-1 font-telugu text-sm font-bold text-brand-crimson sm:text-base">
+                  {copy.eyebrow}
+                </p>
+                <h1 className="font-telugu text-3xl font-bold leading-tight text-stone-900">
+                  {copy.title}
+                </h1>
+              </div>
+              <p className="font-telugu text-sm leading-7 text-stone-700 lg:border-l lg:border-[#e5c9a7] lg:py-1 lg:pl-8 sm:text-base">
+                {copy.description}
+              </p>
             </div>
+          </section>
+
+          <div className="flex flex-wrap items-center justify-end gap-4 px-1 pt-1">
+            <label className="flex items-center gap-3 font-telugu text-sm text-stone-900">
+              {copy.language}
+              <select
+                value={language}
+                onChange={(event) => {
+                  if (event.target.value === 'te' || event.target.value === 'en') {
+                    setLanguage(event.target.value)
+                  }
+                }}
+                className="min-h-11 border border-[#e5c9a7] bg-white px-3 text-sm text-stone-900"
+              >
+                <option value="te">తెలుగు</option>
+                <option value="en">English</option>
+              </select>
+            </label>
+            <label className="flex items-center gap-3 font-telugu text-sm text-stone-900">
+              {copy.country}
+              <select
+                value={country?.country_id ?? ''}
+                onChange={(event) => setCountryId(event.target.value)}
+                className="min-h-11 max-w-56 border border-[#e5c9a7] bg-white px-3 text-sm text-stone-900"
+                disabled={countries.length === 0}
+              >
+                {countries.map((item) => (
+                  <option key={item.country_id} value={item.country_id}>
+                    {getCountryName(item.countrycode)} ({item.currency})
+                  </option>
+                ))}
+              </select>
+            </label>
           </div>
-        </section>
+        </>
       )}
 
       {loading ? (
@@ -686,12 +761,6 @@ function SubscriptionPage() {
       {languagesQuery.error && (
         <p role="status" className="text-sm text-amber-800">
           భాషల జాబితాను లోడ్ చేయలేకపోయాము: {languagesQuery.error.message}
-        </p>
-      )}
-
-      {countriesQuery.error && !pageError && (
-        <p role="alert" className="rounded-lg bg-amber-50 p-4 text-sm text-amber-900">
-          {countriesQuery.error.message}
         </p>
       )}
 

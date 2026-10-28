@@ -6,6 +6,7 @@ import {
   CalendarDays,
   Gift,
   Home,
+  Link,
   Mail,
   Megaphone,
   PencilLine,
@@ -13,6 +14,40 @@ import {
 } from 'lucide-react'
 import currentCover from '../assets/current-cover.jpg'
 import { getMenuSectionsById } from '../lib/menus'
+import type { ReactNode } from 'react'
+
+type SectionTile = {
+  title: string
+  text?: string
+  image?: string
+}
+
+type MenuSection = {
+  sectionTitle?: string
+  sectionName?: string
+  coverImage?: string
+  sectionDesc?: string
+  tiles?: SectionTile[]
+}
+
+type MenuSectionResponse = {
+  sections?: MenuSection[]
+}
+
+type IssueItem = {
+  title: string
+  description?: string
+  icon: string
+  image?: string
+  color: string
+}
+
+type StoryItem = {
+  title: string
+  text?: string
+  description?: string
+  image: string
+}
 
 export const Route = createFileRoute('/')({
   component: IndexComponent,
@@ -228,7 +263,15 @@ const storyCategories = [
   { title: 'పుస్తకాలు', description: 'పఠనం, సమీక్షలు, రచనలు', image: 'photo-1512820790803-83ca734da794' },
 ]
 
-function SectionHeading({ eyebrow, children, href }) {
+function SectionHeading({
+  eyebrow,
+  children,
+  href,
+}: {
+  eyebrow?: string
+  children: ReactNode
+  href?: string
+}) {
   return (
     <div className="flex items-end justify-between gap-4 pb-2">
       <div>
@@ -252,7 +295,7 @@ function IndexComponent() {
     isLoading: isLoadingSections,
     isError: hasSectionError,
     error: sectionError,
-  } = useQuery({
+  } = useQuery<MenuSectionResponse[]>({
     queryKey: ['menuSections', 1],
     queryFn: ({ signal }) => getMenuSectionsById(1, { signal }),
     retry: false,
@@ -261,14 +304,14 @@ function IndexComponent() {
   const sections = (sectionDetails?.length ? sectionDetails : fallbackSectionDetails).flatMap(
     (menu) => (Array.isArray(menu.sections) ? menu.sections : []),
   )
-  const getSection = (name) =>
+  const getSection = (name: string) =>
     sections.find((section) => section.sectionName?.trim().toLowerCase() === name)
   const editionSection = getSection('editions')
   const specialSection = getSection('special')
   const storiesSection = getSection('articles')
   const journeySection = getSection('journey')
   const aboutSection = getSection('aboutus')
-  const issueItems = editionSection?.tiles?.length
+  const issueItems: IssueItem[] = editionSection?.tiles?.length
     ? editionSection.tiles.map((tile, index) => ({
       title: tile.title,
       description: tile.text,
@@ -287,7 +330,7 @@ function IndexComponent() {
       tone: specialStories[index % specialStories.length].tone,
     }))
     : specialStories
-  const storyItems = storiesSection?.tiles?.length
+  const storyItems: StoryItem[] = storiesSection?.tiles?.length
     ? storiesSection.tiles.map((tile, index) => ({
       ...tile,
       image:
@@ -314,13 +357,13 @@ function IndexComponent() {
           Homepage sections could not be loaded. Showing saved content. {sectionError.message}
         </p>
       )}
-      <section className="hero grid gap-5 lg:grid-cols-[0.88fr_1.28fr_0.84fr] lg:items-stretch">
-        <div className="relative flex min-h-[340px] items-center justify-center overflow-hidden">
+      <section className="hero grid">
+        <div className="relative flex min-h-[260px] items-center justify-center overflow-hidden sm:min-h-[340px]">
           <div className="absolute inset-x-0 top-0 h-20 " />
           <img
             src={editionSection?.coverImage?.trim() || currentCover}
             alt="స్వాతి తాజా సంచిక ముఖచిత్రం"
-            className="relative h-[320px] max-w-full rounded-[12px] object-contain shadow-[0_22px_45px_-17px_rgba(74,22,22,0.55)] sm:h-[360px]"
+            className="relative h-[240px] max-w-full rounded-[12px] object-contain shadow-[0_22px_45px_-17px_rgba(74,22,22,0.55)] sm:h-[320px] lg:h-[360px]"
           />
         </div>
 
@@ -331,30 +374,30 @@ function IndexComponent() {
           <SectionHeading eyebrow="పాఠకుల కోసం" href="#stories">
             {editionSection?.sectionTitle || 'ఈ సంచిక'}
           </SectionHeading>
-          <p className="mt-2 max-w-xl font-telugu text-sm leading-6 text-stone-600">
+          {/* <p className="mt-2 max-w-xl font-telugu text-sm leading-6 text-stone-600">
             {editionSection?.sectionDesc ||
               'మీకు ఇష్టమైన...'}
-          </p>
+          </p> */}
 
-          <div className="mt-4 space-y-2">
+          <div className="">
             {issueItems.map((item, index) => (
-              <article key={item.title} className="flex items-center gap-3 rounded-2xl border border-stone-100 bg-stone-50/80 p-2">
+              <article key={item.title} className="flex items-center gap-3 border border-stone-100  px-2">
                 {item.image ? (
                   <img
                     src={item.image}
                     alt=""
-                    className="h-14 w-14 shrink-0 rounded-xl object-cover"
+                    className="h-20 w-20 shrink-0  object-cover"
                   />
                 ) : (
                   <div
-                    className={`flex h-14 w-14 shrink-0 items-center justify-center rounded-xl font-telugu text-[10px] font-bold ${item.color || issueHighlights[index % issueHighlights.length].color}`}
+                    className={`flex h-20 w-20 shrink-0 items-center justify-center font-telugu text-[10px] font-bold ${item.color || issueHighlights[index % issueHighlights.length].color}`}
                   >
                     {item.icon}
                   </div>
                 )}
                 <div className="min-w-0">
-                  <h3 className="font-telugu text-base font-bold text-stone-800">{item.title}</h3>
-                  <p className="mt-0.5 font-telugu text-[11px] leading-5 text-stone-500">
+                  <h2 className="font-telugu text-base font-bold text-stone-900">{item.title}</h2>
+                  <p className="mt-0.5 font-telugu text-[14px] leading-5 text-stone-600">
                     {item.description}
                   </p>
                 </div>
@@ -364,7 +407,7 @@ function IndexComponent() {
 
           <a
             href="#stories"
-            className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-brand-crimson px-5 py-2.5 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
+            className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
           >
             ఈ సంచికను చదవండి <ArrowRight className="h-4 w-4" />
           </a>
@@ -372,7 +415,7 @@ function IndexComponent() {
 
         <aside
           id="subscribe"
-          className="relative text-center flex flex-col justify-between overflow-hidden bg-[#fff7f5] text-stone-800 shadow-[0_18px_35px_-25px_rgba(80,22,22,0.28)] sm:p-4"
+          className="relative text-center flex flex-col justify-between overflow-hidden bg-[#fffaf5] text-stone-800 shadow-[0_18px_35px_-25px_rgba(80,22,22,0.28)] sm:p-4 rounded-md"
         >
           <div className="absolute -right-7 -top-7 h-28 w-28 rounded-full border border-red-200/80" />
           <div className="absolute -right-12 -top-12 h-36 w-36 rounded-full border border-red-200/60" />
@@ -381,39 +424,43 @@ function IndexComponent() {
             <div className="mb-4 inline-flex rounded-xl bg-red-50 p-3 text-brand-darkRed shadow-sm">
               <Home className="h-6 w-6" strokeWidth={1.7} />
             </div>
-            <p className="font-telugu text-[10px] font-semibold uppercase tracking-[0.18em] text-red-600">
-              మీ ఇంటి సంచిక
-            </p>
-            <h2 className="mt-2 font-telugu text-[2.1rem] leading-[1.1] text-brand-darkRed">
+            <h2 className="mt-2 font-telugu text-[2.1rem] leading-[1.1] text-red-700 font-bold">
               స్వాతి
               <br />
               మీ ఇంటికి
             </h2>
+            <p className="mt-3 font-telugu font-medium leading-6 text-stone-800">
+              43 ఏళ్లుగా తెలుగు కుటుంబాలతో కలిసి...
+            </p>
             <p className="mt-3 font-telugu text-sm leading-6 text-stone-600">
-              43 ఏళ్లుగా తెలుగు కుటుంబాలతో కలిసి... మీకు ఇష్టమైన ప్రతి సంచిక నేరుగా మీ ఇంటికే.
+              ఇష్టమైన సంచికలు ప్రతినెలా.
+              <br />
+              స్వాతి ప్రింట్ సంచికను మీ ఇంటికి పంపండి.
             </p>
           </div>
 
           <div className="relative z-10 mt-6">
             <a
-              href="mailto:subscriptions@swati.in"
-              className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-brand-crimson px-5 py-2.5 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
+              href="/subscription"
+              className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
             >
               సభ్యత్వం పొందండి <ArrowRight className="h-4 w-4" />
             </a>
 
-            <div className="mt-5 grid grid-cols-3 gap-2 text-center text-[9px] font-medium text-stone-600">
-              <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-white p-2">
-                <Truck className="h-4 w-4 text-brand-crimson" />
-                ఇంటికి
+            <div className="mt-5 grid grid-cols-3 gap-2 text-center text-[11px] font-medium text-stone-600">
+              <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-brand-cream p-2">
+                <Truck className="h-5 w-5 text-brand-crimson" />
+                మీ ఇంటికి
+                <br />
+                నేరుగా
               </span>
-              <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-white p-2">
-                <BookOpen className="h-4 w-4 text-brand-crimson" />
-                డిజిటల్
+              <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-brand-cream p-2">
+                <BookOpen className="h-5 w-5 text-brand-crimson" />
+                ప్రింట్
               </span>
-              <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-white p-2">
-                <Gift className="h-4 w-4 text-brand-crimson" />
-                ఆఫర్లు
+              <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-brand-cream p-2">
+                <Gift className="h-5 w-5 text-brand-crimson" />
+                ప్రత్యేక <br /> ఆఫర్లు
               </span>
             </div>
           </div>
@@ -422,20 +469,20 @@ function IndexComponent() {
 
       <section id="special-section" className="special-section">
         <div className="section-heading">
-        <SectionHeading eyebrow="పాఠకుల కోసం" href="#special-section">
-          {specialSection?.sectionTitle || 'స్వాతి ప్రత్యేకం'}
-        </SectionHeading>
-         <a href="/special">
-              మరిన్ని ప్రత్యేకం <ArrowRight size={14} />
-            </a>
-            </div>
+          <SectionHeading eyebrow="పాఠకుల కోసం" href="#special-section">
+            {specialSection?.sectionTitle || 'స్వాతి ప్రత్యేకం'}
+          </SectionHeading>
+          <a href="/special">
+            మరిన్ని ప్రత్యేకం <ArrowRight size={14} />
+          </a>
+        </div>
         <div className="grid grid-cols-2 gap-x-4 gap-y-5 xl:grid-cols-5">
           {specialItems.map((story, index) => (
             <article
               key={`${story.title}-${index}`}
               className={
                 index === 0
-                  ? 'group relative isolate col-span-2 flex h-52 flex-col justify-end overflow-hidden bg-stone-800 p-4 text-white shadow-sm sm:h-60 xl:h-48'
+                  ? 'group relative isolate col-span-2 flex h-52 flex-col justify-end overflow-hidden bg-stone-800 p-4 text-white shadow-sm sm:h-60 xl:h-36'
                   : 'group flex min-w-0 flex-col overflow-hidden'
               }
             >
@@ -460,8 +507,8 @@ function IndexComponent() {
                 </>
               ) : (
                 <div className="pt-2">
-                  <h3 className="font-telugu text-sm font-bold text-stone-800">{story.title}</h3>
-                  <p className="mt-1 font-telugu text-[11px] leading-5 text-stone-600">{story.description}</p>
+                  <h3 className="font-telugu font-bold text-stone-800">{story.title}</h3>
+                  <p className="mt-1 font-telugu text-[12px] leading-5 text-stone-600">{story.description}</p>
                 </div>
               )}
             </article>
@@ -471,12 +518,12 @@ function IndexComponent() {
 
       <section id="stories" className="stories-section">
         <div className="section-heading">
-        <SectionHeading eyebrow="చదవండి · తెలుసుకోండి" href="#stories">
-          {storiesSection?.sectionTitle || 'కథనాలు'}
-        </SectionHeading>
-         <a href="/editions">
-              మరిన్ని కథనాలు <ArrowRight size={14} />
-            </a>
+          <SectionHeading eyebrow="చదవండి · తెలుసుకోండి" href="#stories">
+            {storiesSection?.sectionTitle || 'కథనాలు'}
+          </SectionHeading>
+          <a href="/editions">
+            మరిన్ని కథనాలు <ArrowRight size={14} />
+          </a>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
           {storyItems.map((story, index) => (
@@ -494,8 +541,8 @@ function IndexComponent() {
                 />
               </div>
               <div className="p-3 sm:p-4">
-                <h3 className="font-telugu text-sm font-bold text-stone-800">{story.title}</h3>
-                <p className="mt-1 font-telugu text-[11px] leading-5 text-stone-500">
+                <h3 className="font-telugu font-bold text-stone-800">{story.title}</h3>
+                <p className="mt-1 font-telugu text-[12px] leading-5 text-stone-500">
                   {story.text ?? story.description}
                 </p>
               </div>
@@ -520,7 +567,7 @@ function IndexComponent() {
           </p>
           <a
             href="#about"
-            className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-brand-crimson px-5 py-2.5 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
+            className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
           >
             మా ప్రయాణం గురించి <ArrowRight className="h-4 w-4" />
           </a>
@@ -528,7 +575,7 @@ function IndexComponent() {
         <div className="journey-row">
           <img
             className="journey-banner"
-            src={journeySection?.tiles[0]?.image}
+            src={journeySection?.tiles?.[0]?.image}
             alt="Books representing Swati's 43-year journey"
           />
         </div>
@@ -546,7 +593,7 @@ function IndexComponent() {
             </p>
             <a
               href="#about"
-              className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-brand-crimson px-5 py-2.5 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
+              className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
             >
               మా గురించి తెలుసుకోండి <ArrowRight className="h-4 w-4" />
             </a>

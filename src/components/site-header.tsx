@@ -1,10 +1,18 @@
 import { useQuery } from '@tanstack/react-query'
-import { useRouterState } from '@tanstack/react-router'
+import { Link, useRouterState } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
 import { useState } from 'react'
 import { getAllMenus } from '../lib/menus'
 import brandImage from '../assets/header-brand.jpg'
 import wordmarkImage from '../assets/header-wordmark.jpg'
+
+type MenuItem = {
+  id: number | string
+  label: string
+  to: string
+}
+
+type Language = 'te' | 'en'
 
 const defaultMenus = [
   { id: 1, label: 'మన స్వాతి', to: '/' },
@@ -18,18 +26,24 @@ const defaultMenus = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
-  const [language, setLanguage] = useState('te')
+  const [language, setLanguage] = useState<Language>('te')
   const {
     data: fetchedMenus,
     isError,
     error,
-  } = useQuery({
+  } = useQuery<MenuItem[]>({
     queryKey: ['menus', language],
     queryFn: ({ signal }) => getAllMenus({ language, signal }),
     retry: false,
     staleTime: 5 * 60 * 1000,
   })
   const menus = fetchedMenus?.length ? fetchedMenus : defaultMenus
+  const formattedDate = new Intl.DateTimeFormat(language === 'te' ? 'te-IN' : 'en-US', {
+    weekday: 'long',
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  }).format(new Date())
   const pathname = useRouterState({ select: (state) => state.location.pathname })
   const activeMenuId = menus.find((item) => {
     if (/^https?:\/\//i.test(item.to)) return false
@@ -37,44 +51,57 @@ export function SiteHeader() {
     return pathname === itemPath || (itemPath !== '/' && pathname.startsWith(`${itemPath}/`))
   })?.id
 
-  function renderMenuLink(item, mobile = false) {
+  function renderMenuLink(item: MenuItem, mobile = false) {
     const active = item.id === activeMenuId
     const external = /^https?:\/\//i.test(item.to)
 
-    return (
+    const className = mobile
+      ? `relative inline-block w-fit px-2 py-2 text-base font-medium transition-colors ${
+          active
+            ? 'text-red-700 after:absolute after:inset-x-2 after:bottom-1 after:h-0.5 after:bg-red-700'
+            : 'text-stone-800 hover:text-red-700'
+        }`
+      : `flex-1 border-r border-stone-200 px-2 text-center text-base font-medium leading-6 transition-colors last:border-r-0 ${
+          active ? 'text-red-700' : 'text-stone-900 hover:text-red-700'
+        }`
+    const content = mobile ? (
+      item.label
+    ) : (
+      <span
+        className={
+          active
+            ? 'relative inline-block pb-1 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-red-700'
+            : 'inline-block'
+        }
+      >
+        {item.label}
+      </span>
+    )
+    const onClick = () => mobile && setOpen(false)
+
+    return external ? (
       <a
         key={item.id}
         href={item.to}
-        target={external ? '_blank' : undefined}
-        rel={external ? 'noreferrer' : undefined}
+        target="_blank"
+        rel="noreferrer"
         aria-current={active ? 'page' : undefined}
-        onClick={() => mobile && setOpen(false)}
-        className={
-          mobile
-            ? `relative inline-block w-fit px-2 py-2 text-sm font-bold transition-colors ${
-                active
-                  ? 'text-red-700 after:absolute after:inset-x-2 after:bottom-1 after:h-0.5 after:bg-red-700'
-                  : 'text-stone-800 hover:text-red-700'
-              }`
-            : `flex-1 border-r border-stone-200 px-2 text-center text-[clamp(10px,0.82vw,14px)] font-bold leading-6 transition-colors last:border-r-0 ${
-                active ? 'text-red-700' : 'text-stone-900 hover:text-red-700'
-              }`
-        }
+        onClick={onClick}
+        className={className}
       >
-        {mobile ? (
-          item.label
-        ) : (
-          <span
-            className={
-              active
-                ? 'relative inline-block pb-1 after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-red-700'
-                : 'inline-block'
-            }
-          >
-            {item.label}
-          </span>
-        )}
+        {content}
       </a>
+    ) : (
+      <Link
+        key={item.id}
+        to={item.to}
+        preload="intent"
+        aria-current={active ? 'page' : undefined}
+        onClick={onClick}
+        className={className}
+      >
+        {content}
+      </Link>
     )
   }
 
@@ -82,16 +109,13 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 bg-brand-crimson text-white shadow-sm">
       <div className="border-b border-white/15">
         <div
-          className="mx-auto grid max-w-7xl items-center px-5 py-3 sm:py-4"
+          className="site-header-banner mx-auto grid max-w-7xl items-center px-5 py-3 sm:py-4"
           style={{
             backgroundImage: `url(${brandImage})`,
-            backgroundPosition: 'left center',
-            backgroundSize: 'auto 100%',
-            minHeight: '92px',
-            backgroundRepeat: 'no-repeat',
+            minHeight: 'clamp(72px, 8vw, 112px)',
           }}
         >
-          <div className="justify-self-end">
+          <div className="flex -translate-y-1 flex-col items-center justify-self-end">
             <a href="/" className="block" aria-label="Swati Publications home">
               <img
                 src={wordmarkImage}
@@ -99,6 +123,9 @@ export function SiteHeader() {
                 className="h-auto max-h-12 w-36 object-contain sm:max-h-14 sm:w-48"
               />
             </a>
+            <p className="mt-2 w-36 text-center text-[10px] font-medium leading-tight text-white sm:w-48 sm:text-xs">
+              {formattedDate}
+            </p>
           </div>
         </div>
       </div>
@@ -119,8 +146,8 @@ export function SiteHeader() {
             }}
             className="ml-auto shrink-0 border border-stone-300 bg-white px-2 py-1 text-xs text-stone-800"
           >
-            <option value="te">te</option>
-            <option value="en">en</option>
+            <option value="te">తెలుగు</option>
+            <option value="en">English</option>
           </select>
 
           <button

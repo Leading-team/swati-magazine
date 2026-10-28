@@ -12,7 +12,7 @@ const socialLinks = [
 export function SiteFooter() {
   return (
     <footer className="border-t border-white/15 bg-brand-crimson text-white">
-      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-5 py-8 sm:grid-cols-3">
+      <div className="mx-auto grid max-w-7xl grid-cols-1 items-center gap-6 px-5 pt-4 sm:grid-cols-3">
         <Link to="/" className="justify-self-center sm:justify-self-start" aria-label="Swati home">
           <img
             src={wordmarkImage}
@@ -45,7 +45,7 @@ export function SiteFooter() {
         </div>
       </div>
 
-      <div className="border-t border-white/15 px-5 py-3 text-center text-xs text-red-100/80">
+      <div className="px-5 pb-2 text-center text-xs text-red-100/80">
         © 2026 Swati Publications. All rights reserved.
       </div>
     </footer>
