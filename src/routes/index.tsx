@@ -13,9 +13,11 @@ import {
   Truck,
 } from 'lucide-react'
 import currentCover from '../assets/current-cover.jpg'
+import noImage from '../assets/noimage.png'
 import { getMenuSectionsById } from '../lib/menus'
+import { useLanguage } from '../lib/language'
 import { getContactEmailDetails } from '../lib/subscriptionApi'
-import type { ReactNode } from 'react'
+import type { ReactNode, SyntheticEvent } from 'react'
 
 type ContactEmailDetail = {
   id: number
@@ -76,6 +78,11 @@ type StoryItem = {
   text?: string
   description?: string
   image: string
+}
+
+function handleImageError(event: SyntheticEvent<HTMLImageElement>) {
+  event.currentTarget.onerror = null
+  event.currentTarget.src = noImage
 }
 
 export const Route = createFileRoute('/')({
@@ -319,14 +326,16 @@ function SectionHeading({
 }
 
 function IndexComponent() {
+  const { language } = useLanguage()
+  const isEnglish = language === 'en'
   const {
     data: sectionDetails,
     isLoading: isLoadingSections,
     isError: hasSectionError,
     error: sectionError,
   } = useQuery<MenuSectionResponse[]>({
-    queryKey: ['menuSections', 1],
-    queryFn: ({ signal }) => getMenuSectionsById(1, { signal }),
+    queryKey: ['menuSections', 1, language],
+    queryFn: ({ signal }) => getMenuSectionsById(1, { language, signal }),
     retry: false,
     staleTime: 5 * 60 * 1000,
   })
@@ -394,21 +403,24 @@ function IndexComponent() {
     <div className="homePage">
       {isLoadingSections && (
         <p role="status" className="rounded-lg bg-white px-4 py-3 text-sm text-stone-600">
-          Homepage sections are loading…
+          {isEnglish
+            ? 'Homepage sections are loading…'
+            : 'హోమ్‌పేజీ విభాగాలు లోడ్ అవుతున్నాయి…'}
         </p>
       )}
-      {hasSectionError && (
+      {/* {hasSectionError && (
         <p role="alert" className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
           Homepage sections could not be loaded. Showing saved content. {sectionError.message}
         </p>
-      )}
+      )} */}
       <section className="hero grid">
         <div className="relative flex min-h-[260px] items-center justify-center overflow-hidden sm:min-h-[340px]">
           <div className="absolute inset-x-0 top-0 h-20 " />
           <img
             src={editionSection?.coverImage?.trim() || currentCover}
-            alt="స్వాతి తాజా సంచిక ముఖచిత్రం"
+            alt={isEnglish ? 'Cover of the latest Swati issue' : 'స్వాతి తాజా సంచిక ముఖచిత్రం'}
             className="relative h-[240px] max-w-full rounded-[12px] object-contain shadow-[0_22px_45px_-17px_rgba(74,22,22,0.55)] sm:h-[320px] lg:h-[360px]"
+            onError={handleImageError}
           />
         </div>
 
@@ -417,7 +429,7 @@ function IndexComponent() {
           className="flex flex-col justify-center rounded-[30px] sm:p-5"
         >
           <SectionHeading eyebrow="పాఠకుల కోసం" href="#stories">
-            {editionSection?.sectionTitle || 'ఈ సంచిక'}
+            {isEnglish ? 'Current Issue' : editionSection?.sectionTitle || 'ఈ సంచిక'}
           </SectionHeading>
           {/* <p className="mt-2 max-w-xl font-telugu text-sm leading-6 text-stone-600">
             {editionSection?.sectionDesc ||
@@ -432,6 +444,7 @@ function IndexComponent() {
                     src={item.image}
                     alt=""
                     className="h-20 w-20 shrink-0  object-cover"
+                    onError={handleImageError}
                   />
                 ) : (
                   <div
@@ -454,7 +467,7 @@ function IndexComponent() {
             href="#stories"
             className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
           >
-            ఈ సంచికను చదవండి <ArrowRight className="h-4 w-4" />
+            {isEnglish ? 'Read this issue' : 'ఈ సంచికను చదవండి'} <ArrowRight className="h-4 w-4" />
           </a>
         </div>
 
@@ -470,17 +483,21 @@ function IndexComponent() {
               <Home className="h-6 w-6" strokeWidth={1.7} />
             </div>
             <h2 className="mt-2 font-telugu text-[2.1rem] leading-[1.1] text-red-700 font-bold">
-              స్వాతి
+              {isEnglish ? 'Swati' : 'స్వాతి'}
               <br />
-              మీ ఇంటికి
+              {isEnglish ? 'At Your Home' : 'మీ ఇంటికి'}
             </h2>
             <p className="mt-3 font-telugu font-medium leading-6 text-stone-800">
-              43 ఏళ్లుగా తెలుగు కుటుంబాలతో కలిసి...
+              {isEnglish
+                ? 'Connecting with Telugu families for 43 years…'
+                : '43 ఏళ్లుగా తెలుగు కుటుంబాలతో కలిసి...'}
             </p>
             <p className="mt-3 font-telugu text-sm leading-6 text-stone-600">
-              ఇష్టమైన సంచికలు ప్రతినెలా.
+              {isEnglish ? 'Your favourite issues, every month.' : 'ఇష్టమైన సంచికలు ప్రతినెలా.'}
               <br />
-              స్వాతి ప్రింట్ సంచికను మీ ఇంటికి పంపండి.
+              {isEnglish
+                ? 'Get the Swati print edition delivered to your home.'
+                : 'స్వాతి ప్రింట్ సంచికను మీ ఇంటికి పంపండి.'}
             </p>
           </div>
 
@@ -489,23 +506,23 @@ function IndexComponent() {
               href="/subscription"
               className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
             >
-              సభ్యత్వం పొందండి <ArrowRight className="h-4 w-4" />
+              {isEnglish ? 'Subscribe now' : 'సభ్యత్వం పొందండి'} <ArrowRight className="h-4 w-4" />
             </a>
 
             <div className="mt-5 grid grid-cols-3 gap-2 text-center text-[11px] font-medium text-stone-600">
               <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-brand-cream p-2">
                 <Truck className="h-5 w-5 text-brand-crimson" />
-                మీ ఇంటికి
+                {isEnglish ? 'Delivered' : 'మీ ఇంటికి'}
                 <br />
-                నేరుగా
+                {isEnglish ? 'to your door' : 'నేరుగా'}
               </span>
               <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-brand-cream p-2">
                 <BookOpen className="h-5 w-5 text-brand-crimson" />
-                ప్రింట్
+                {isEnglish ? 'Print' : 'ప్రింట్'}
               </span>
               <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-brand-cream p-2">
                 <Gift className="h-5 w-5 text-brand-crimson" />
-                ప్రత్యేక <br /> ఆఫర్లు
+                {isEnglish ? <>Special <br /> offers</> : <>ప్రత్యేక <br /> ఆఫర్లు</>}
               </span>
             </div>
           </div>
@@ -515,10 +532,10 @@ function IndexComponent() {
       <section id="special-section" className="special-section">
         <div className="section-heading">
           <SectionHeading eyebrow="పాఠకుల కోసం" href="#special-section">
-            {specialSection?.sectionTitle || 'స్వాతి ప్రత్యేకం'}
+            {isEnglish ? 'Swati Specials' : specialSection?.sectionTitle || 'స్వాతి ప్రత్యేకం'}
           </SectionHeading>
           <a href="/special">
-            మరిన్ని ప్రత్యేకం <ArrowRight size={14} />
+            {isEnglish ? 'More special stories' : 'మరిన్ని ప్రత్యేకం'} <ArrowRight size={14} />
           </a>
         </div>
         <div className="grid grid-cols-2 gap-x-4 gap-y-5 xl:grid-cols-5">
@@ -535,6 +552,7 @@ function IndexComponent() {
                 src={story.image}
                 alt=""
                 loading="lazy"
+                onError={handleImageError}
                 className={
                   index === 0
                     ? 'absolute inset-0 -z-20 h-full w-full object-cover transition duration-700 group-hover:scale-105'
@@ -564,10 +582,10 @@ function IndexComponent() {
       <section id="stories" className="stories-section">
         <div className="section-heading">
           <SectionHeading eyebrow="చదవండి · తెలుసుకోండి" href="#stories">
-            {storiesSection?.sectionTitle || 'కథనాలు'}
+            {isEnglish ? 'Stories' : storiesSection?.sectionTitle || 'కథనాలు'}
           </SectionHeading>
           <a href="/editions">
-            మరిన్ని కథనాలు <ArrowRight size={14} />
+            {isEnglish ? 'More stories' : 'మరిన్ని కథనాలు'} <ArrowRight size={14} />
           </a>
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
@@ -583,6 +601,7 @@ function IndexComponent() {
                   alt=""
                   loading="lazy"
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  onError={handleImageError}
                 />
               </div>
               <div className="p-3 sm:p-4">
@@ -601,20 +620,21 @@ function IndexComponent() {
       >
         <div className="flex flex-col justify-center p-7 sm:p-10">
           <SectionHeading eyebrow="మన గురించి" href="#journey">
-            {journeySection?.sectionTitle || 'స్వాతి గురించి'}
+            {isEnglish ? 'About Swati' : journeySection?.sectionTitle || 'స్వాతి గురించి'}
           </SectionHeading>
           <p className="mt-2 text-2xl font-semibold tracking-[0.12em] text-stone-500">
             {journeyTile?.title || '1984 — 2026'}
           </p>
           <p className="mt-4 max-w-md font-telugu text-sm leading-7 text-stone-600">
-            {journeyTile?.text ||
-              'తెలుగు కుటుంబాల ప్రేమాభిమానాలతో, కథలతో, జ్ఞాపకాలతో సాగుతున్న స్వాతి ప్రయాణం...'}
+            {journeyTile?.text || (isEnglish
+              ? "Swati's journey continues with the love of Telugu families, stories and memories…"
+              : 'తెలుగు కుటుంబాల ప్రేమాభిమానాలతో, కథలతో, జ్ఞాపకాలతో సాగుతున్న స్వాతి ప్రయాణం...')}
           </p>
           <a
             href="/journey"
             className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
           >
-            మా ప్రయాణం గురించి <ArrowRight className="h-4 w-4" />
+            {isEnglish ? 'Explore our journey' : 'మా ప్రయాణం గురించి'} <ArrowRight className="h-4 w-4" />
           </a>
         </div>
         <div className="journey-row">
@@ -622,6 +642,7 @@ function IndexComponent() {
             className="journey-banner"
             src={journeySection?.tiles?.[0]?.image}
             alt="Books representing Swati's 43-year journey"
+            onError={handleImageError}
           />
         </div>
       </section>
@@ -630,17 +651,18 @@ function IndexComponent() {
         <section id="about" className="about-hero flex min-h-[210px] items-center px-5 py-5 sm:px-8 sm:py-6">
           <div className="max-w-sm">
             <SectionHeading eyebrow="మన గురించి" href="#about">
-              {aboutSection?.sectionTitle || 'స్వాతి గురించి'}
+              {isEnglish ? 'About Swati' : aboutSection?.sectionTitle || 'స్వాతి గురించి'}
             </SectionHeading>
             <p className="mt-3 font-telugu text-sm leading-6 text-stone-700">
-              {aboutTile?.title || aboutTile?.text ||
-                '43 సంవత్సరాలుగా తెలుగు కుటుంబాలతో కలిసి ప్రయాణిస్తున్న స్వాతి కథ...'}
+              {aboutTile?.title || aboutTile?.text || (isEnglish
+                ? "The story of Swati's 43-year journey alongside Telugu families…"
+                : '43 సంవత్సరాలుగా తెలుగు కుటుంబాలతో కలిసి ప్రయాణిస్తున్న స్వాతి కథ...')}
             </p>
             <a
               href="/about"
               className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
             >
-              మా గురించి తెలుసుకోండి <ArrowRight className="h-4 w-4" />
+              {isEnglish ? 'Learn about us' : 'మా గురించి తెలుసుకోండి'} <ArrowRight className="h-4 w-4" />
             </a>
           </div>
         </section>
@@ -648,27 +670,36 @@ function IndexComponent() {
         <section id="contact" className="flex flex-col justify-center gap-3 bg-[#fffaf5] px-5 py-5 sm:px-6">
           <div>
             <SectionHeading eyebrow="మన గురించి" href="#contact">
-              సంప్రదించండి
+              {isEnglish ? 'Contact us' : 'సంప్రదించండి'}
             </SectionHeading>
             <p className="mt-1 font-telugu text-xs leading-5 text-stone-600">
-              మీ అభిప్రాయాలు, సూచనలు, సహకారం మాకు ఎంతో విలువైనవి.
+              {isEnglish
+                ? 'Your thoughts, suggestions and support mean a lot to us.'
+                : 'మీ అభిప్రాయాలు, సూచనలు, సహకారం మాకు ఎంతో విలువైనవి.'}
             </p>
           </div>
           {isLoadingContactDetails && (
             <p role="status" className="font-telugu text-xs text-stone-600">
-              సంప్రదింపు వివరాలు లోడ్ అవుతున్నాయి…
+              {isEnglish ? 'Loading contact details…' : 'సంప్రదింపు వివరాలు లోడ్ అవుతున్నాయి…'}
             </p>
           )}
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
             {activeContactDetails.map((contact) => {
               const Icon =
                 contact.id === 1 ? Megaphone : contact.id === 2 ? PencilLine : Mail
+              const description = isEnglish
+                ? contact.id === 1
+                  ? 'Advertise with us'
+                  : contact.id === 2
+                    ? 'Join us'
+                    : 'General enquiries'
+                : contact.description
 
               return (
                 <div key={contact.id} className="flex min-w-0 flex-col items-center rounded-xl bg-[#f4e8d9] px-2 py-3 text-center">
                   <Icon className="h-5 w-5 shrink-0 text-brand-crimson" />
                   <h3 className="mt-2 font-telugu text-xs font-bold text-stone-800">
-                    {contact.description}
+                    {description}
                   </h3>
                   <a
                     href={`mailto:${contact.email}`}

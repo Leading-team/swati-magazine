@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
 import { useState } from 'react'
+import { useLanguage } from '../lib/language'
 import { getAllMenus } from '../lib/menus'
 import brandImage from '../assets/header-brand.jpg'
 import wordmarkImage from '../assets/header-wordmark.jpg'
@@ -11,8 +12,6 @@ type MenuItem = {
   label: string
   to: string
 }
-
-type Language = 'te' | 'en'
 
 const defaultMenus = [
   { id: 1, label: 'మన స్వాతి', to: '/' },
@@ -26,7 +25,7 @@ const defaultMenus = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
-  const [language, setLanguage] = useState<Language>('te')
+  const { language, setLanguage } = useLanguage()
   const {
     data: fetchedMenus,
     isError,
@@ -171,11 +170,11 @@ export function SiteHeader() {
         </div>
       )}
 
-      {isError && (
+      {/* {isError && (
         <p role="status" className="bg-amber-50 px-5 py-2 text-center text-xs text-amber-900">
           Navigation menus could not be loaded. Showing default links. {error.message}
         </p>
-      )}
+      )} */}
     </header>
   )
 }

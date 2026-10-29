@@ -68,9 +68,14 @@ function extractMenuSections(payload) {
   throw new Error('The menu sections service returned an unexpected response.')
 }
 
-export async function getMenuSectionsById(menuId = 1, { signal } = {}) {
+/**
+ * @param {number} menuId
+ * @param {{ language?: string, signal?: AbortSignal }} options
+ */
+export async function getMenuSectionsById(menuId = 1, { language = 'te', signal } = {}) {
   const url = new URL(`${API_BASE_URL}/MenuSection/GetMenuSectionsById`)
   url.searchParams.set('menuId', String(menuId))
+  url.searchParams.set('language', language)
 
   const response = await fetch(url, {
     method: 'GET',

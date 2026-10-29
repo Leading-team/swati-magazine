@@ -1,6 +1,7 @@
 import { createRootRouteWithContext, Link, Outlet } from '@tanstack/react-router'
 import { SiteHeader } from '../components/site-header'
 import { SiteFooter } from '../components/site-footer'
+import { LanguageProvider } from '../lib/language'
 
 export const Route = createRootRouteWithContext()({
   component: RootComponent,
@@ -9,15 +10,17 @@ export const Route = createRootRouteWithContext()({
 
 function RootComponent() {
   return (
-    <div className="min-h-screen flex flex-col bg-brand-warmBg">
-      <SiteHeader />
+    <LanguageProvider>
+      <div className="min-h-screen flex flex-col bg-brand-warmBg">
+        <SiteHeader />
 
-      <main className="mx-auto w-full max-w-7xl flex-grow">
-        <Outlet />
-      </main>
+        <main className="mx-auto w-full max-w-7xl flex-grow">
+          <Outlet />
+        </main>
 
-      <SiteFooter />
-    </div>
+        <SiteFooter />
+      </div>
+    </LanguageProvider>
   )
 }
 
