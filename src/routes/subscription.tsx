@@ -18,6 +18,7 @@ type SubscriptionPlan = {
 
 type SubscriptionOffer = {
   Title: string
+  Image: string
   Plans?: SubscriptionPlan[]
 }
 
@@ -681,7 +682,8 @@ function SubscriptionPage() {
                   </div>
 
                   {plans.length > 1 && (
-                    <label className="mt-4 grid gap-1 font-telugu text-xs font-semibold text-stone-700">
+                    <div className="mt-4 flex flex-row items-start gap-4 font-telugu text-xs font-semibold text-stone-700">
+                    <label className="flex flex-1 flex-col gap-1">
                       {copy.term}
                       <select
                         value={selectedPlan?.PlanName || ''}
@@ -699,11 +701,18 @@ function SubscriptionPage() {
                           </option>
                         ))}
                       </select>
+                      
                     </label>
+                    <img src={offer.Image} alt={offer.Title} className="w-2/5 rounded-lg object-contain" />
+                    </div>
+
+                    
+                    
                   )}
 
                   {offerIndex === 2 && offerLanguages.length > 0 && (
-                    <label className="mt-3 grid gap-1 font-telugu text-xs font-semibold text-stone-700">
+                    <div className="mt-4 flex flex-row items-start gap-4 font-telugu text-xs font-semibold text-stone-700">
+                    <label className="flex flex-1 flex-col gap-1">
                       {copy.language}
                       <select
                         value={selectedLanguageCode}
@@ -717,6 +726,7 @@ function SubscriptionPage() {
                         ))}
                       </select>
                     </label>
+                    </div>
                   )}
 
                   <div className="mt-5">

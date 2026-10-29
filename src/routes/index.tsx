@@ -14,7 +14,36 @@ import {
 } from 'lucide-react'
 import currentCover from '../assets/current-cover.jpg'
 import { getMenuSectionsById } from '../lib/menus'
+import { getContactEmailDetails } from '../lib/subscriptionApi'
 import type { ReactNode } from 'react'
+
+type ContactEmailDetail = {
+  id: number
+  description: string
+  email: string
+  active: boolean
+}
+
+const fallbackContactDetails: ContactEmailDetail[] = [
+  {
+    id: 1,
+    description: 'మాతో ప్రకటన చేయండి',
+    email: 'swatipublication2026@gmail.com',
+    active: true,
+  },
+  {
+    id: 2,
+    description: 'మాతో చేరండి',
+    email: 'swatipublication2026@gmail.com',
+    active: true,
+  },
+  {
+    id: 3,
+    description: 'ఇతర విచారణలు',
+    email: 'swatipublication2026@gmail.com',
+    active: true,
+  },
+]
 
 type SectionTile = {
   title: string
@@ -301,9 +330,25 @@ function IndexComponent() {
     retry: false,
     staleTime: 5 * 60 * 1000,
   })
+  const {
+    data: contactDetails,
+    isLoading: isLoadingContactDetails,
+    isError: hasContactDetailsError,
+    error: contactDetailsError,
+  } = useQuery<ContactEmailDetail[]>({
+    queryKey: ['contactEmailDetails'],
+    queryFn: ({ signal }) => getContactEmailDetails({ signal }),
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  })
   const sections = (sectionDetails?.length ? sectionDetails : fallbackSectionDetails).flatMap(
     (menu) => (Array.isArray(menu.sections) ? menu.sections : []),
   )
+  const fetchedActiveContactDetails =
+    contactDetails?.filter((contact) => contact.active) ?? []
+  const activeContactDetails = fetchedActiveContactDetails.length
+    ? fetchedActiveContactDetails
+    : fallbackContactDetails
   const getSection = (name: string) =>
     sections.find((section) => section.sectionName?.trim().toLowerCase() === name)
   const editionSection = getSection('editions')
@@ -566,7 +611,7 @@ function IndexComponent() {
               'తెలుగు కుటుంబాల ప్రేమాభిమానాలతో, కథలతో, జ్ఞాపకాలతో సాగుతున్న స్వాతి ప్రయాణం...'}
           </p>
           <a
-            href="#about"
+            href="/journey"
             className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
           >
             మా ప్రయాణం గురించి <ArrowRight className="h-4 w-4" />
@@ -592,7 +637,7 @@ function IndexComponent() {
                 '43 సంవత్సరాలుగా తెలుగు కుటుంబాలతో కలిసి ప్రయాణిస్తున్న స్వాతి కథ...'}
             </p>
             <a
-              href="#about"
+              href="/about"
               className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
             >
               మా గురించి తెలుసుకోండి <ArrowRight className="h-4 w-4" />
@@ -609,18 +654,31 @@ function IndexComponent() {
               మీ అభిప్రాయాలు, సూచనలు, సహకారం మాకు ఎంతో విలువైనవి.
             </p>
           </div>
+          {isLoadingContactDetails && (
+            <p role="status" className="font-telugu text-xs text-stone-600">
+              సంప్రదింపు వివరాలు లోడ్ అవుతున్నాయి…
+            </p>
+          )}
           <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
-            {[
-              { icon: PencilLine, title: 'సంపాదకీయం', text: 'కథలు, రచనలు, పాఠకుల కోసం' },
-              { icon: Megaphone, title: 'విజ్ఞాపన కోసం', text: 'ప్రకటనలు, బ్రాండ్ భాగస్వామ్యాలు' },
-              { icon: Mail, title: 'సాధారణ సమాచారం', text: 'ఇతర సమాచారం, సూచనలు' },
-            ].map(({ icon: Icon, title, text }) => (
-              <div key={title} className="flex min-w-0 flex-col items-center rounded-xl bg-[#f4e8d9] px-2 py-3 text-center">
-                <Icon className="h-5 w-5 shrink-0 text-brand-crimson" />
-                <h3 className="mt-2 font-telugu text-xs font-bold text-stone-800">{title}</h3>
-                <p className="mt-1 font-telugu text-[10px] leading-4 text-stone-600">{text}</p>
-              </div>
-            ))}
+            {activeContactDetails.map((contact) => {
+              const Icon =
+                contact.id === 1 ? Megaphone : contact.id === 2 ? PencilLine : Mail
+
+              return (
+                <div key={contact.id} className="flex min-w-0 flex-col items-center rounded-xl bg-[#f4e8d9] px-2 py-3 text-center">
+                  <Icon className="h-5 w-5 shrink-0 text-brand-crimson" />
+                  <h3 className="mt-2 font-telugu text-xs font-bold text-stone-800">
+                    {contact.description}
+                  </h3>
+                  <a
+                    href={`mailto:${contact.email}`}
+                    className="mt-1 break-all text-[10px] leading-4 text-stone-600 hover:text-brand-crimson"
+                  >
+                    {contact.email}
+                  </a>
+                </div>
+              )
+            })}
           </div>
         </section>
       </div>

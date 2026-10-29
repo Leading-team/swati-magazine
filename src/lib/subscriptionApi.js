@@ -47,6 +47,13 @@ export async function getSubscriptionLanguages({ signal } = {}) {
   return asArray(await request('/master/GetAllLanguages', { signal }), 'languages')
 }
 
+export async function getContactEmailDetails({ signal } = {}) {
+  return asArray(
+    await request('/master/GetContactEmailDetails', { signal }),
+    'contact details',
+  )
+}
+
 export async function createSubscriptionCheckout(checkoutData) {
   return request('/payment/create-order', { method: 'POST', body: checkoutData })
 }
