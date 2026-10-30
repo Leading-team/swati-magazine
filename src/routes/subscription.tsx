@@ -85,7 +85,6 @@ export const Route = createFileRoute('/subscription')({
 
 const pageCopy = {
   te: {
-    eyebrow: 'స్వాతి మీ ఇంటికి',
     title: 'మీ సభ్యత్వాన్ని ఎంచుకోండి',
     description: 'వారపత్రిక, మాసపత్రిక డిజిటల్ సంచికలు మరియు ప్రత్యేక కథనాలను చదవడానికి మీకు సరైన ప్లాన్‌ను ఎంచుకోండి.',
     language: 'భాష',
@@ -151,7 +150,6 @@ const pageCopy = {
     plansLabel: 'సభ్యత్వ ప్లాన్‌లు',
   },
   en: {
-    eyebrow: 'Swati at your home',
     title: 'Choose your subscription',
     description: 'Choose the plan that suits you to read weekly and monthly editions and exclusive stories.',
     language: 'Language',
@@ -432,26 +430,23 @@ function SubscriptionPage() {
   }
 
   return (
-    <div className="mx-auto max-w-7xl space-y-8 py-2 sm:py-5 px-6">
+    <div className="mx-auto max-w-7xl space-y-6 px-6 py-1 sm:space-y-6 sm:py-3">
       {!selectedOffer && (
         <>
-          <section className="overflow-hidden rounded-2xl border border-[#e5c9a7] border-l-[7px] bg-gradient-to-br from-white via-white to-[#fff7ed] px-5 shadow-sm sm:px-8 lg:px-12">
-            <div className="grid gap-5 lg:grid-cols-[1.2fr_0.8fr] lg:items-center lg:gap-8">
-              <div>
-                <p className="mb-1 font-telugu text-sm font-bold text-brand-crimson sm:text-base">
-                  {copy.eyebrow}
-                </p>
-                <h1 className="font-telugu text-3xl font-bold leading-tight text-stone-900">
+          <section className="overflow-hidden rounded-2xl border border-[#e5c9a7] border-l-[7px] bg-gradient-to-br from-white via-white to-[#fff7ed] px-4 py-2 shadow-sm sm:px-6 sm:py-2 lg:px-8">
+            <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2 sm:gap-4">
+              <div className="min-w-0">
+                <h1 className="break-words font-telugu text-lg font-bold leading-tight text-stone-900 sm:text-2xl">
                   {copy.title}
                 </h1>
               </div>
-              <div className="flex justify-end sm:p-4">
-                <label className="grid w-full min-w-0 gap-1.5 font-telugu text-xs font-semibold text-stone-700 sm:max-w-64">
+              <div className="flex justify-end">
+                <label className="flex shrink-0 items-center gap-2 whitespace-nowrap font-telugu text-xs font-semibold text-stone-700">
                   {copy.country}
                   <select
                     value={country?.country_id ?? ''}
                     onChange={(event) => setCountryId(event.target.value)}
-                    className="h-11 w-full rounded-lg border border-stone-300 bg-stone-50 px-3 text-sm text-stone-900 outline-none transition focus:border-brand-crimson focus:ring-2 focus:ring-brand-crimson/15 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="h-9 w-28 rounded-lg border border-stone-300 bg-stone-50 px-2 text-xs text-stone-900 outline-none transition focus:border-brand-crimson focus:ring-2 focus:ring-brand-crimson/15 disabled:cursor-not-allowed disabled:opacity-60 sm:w-40 sm:px-3 sm:text-sm"
                     disabled={countries.length === 0}
                   >
                     {countries.map((item) => (
