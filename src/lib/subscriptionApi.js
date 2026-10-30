@@ -54,6 +54,10 @@ export async function getContactEmailDetails({ signal } = {}) {
   )
 }
 
+export async function submitContactEnquiry(enquiry) {
+  return request('/contact/submit-enquiry', { method: 'POST', body: enquiry })
+}
+
 export async function createSubscriptionCheckout(checkoutData) {
   return request('/payment/create-order', { method: 'POST', body: checkoutData })
 }

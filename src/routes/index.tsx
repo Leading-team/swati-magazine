@@ -48,8 +48,10 @@ const fallbackContactDetails: ContactEmailDetail[] = [
 ]
 
 type SectionTile = {
-  title: string
+  title?: string
+  titleEn?: string
   text?: string
+  textEn?: string
   image?: string
 }
 
@@ -360,6 +362,30 @@ function IndexComponent() {
     : fallbackContactDetails
   const getSection = (name: string) =>
     sections.find((section) => section.sectionName?.trim().toLowerCase() === name)
+  const getSectionHeading = (
+    section: MenuSection | undefined,
+    teluguFallback: string,
+    englishFallback: string,
+  ) => {
+    const sectionTitle = section?.sectionTitle?.trim()
+    const sectionName = section?.sectionName?.trim()
+
+    if (isEnglish) {
+      return sectionName || sectionTitle || englishFallback
+    }
+
+    return sectionTitle || teluguFallback
+  }
+  const getLocalizedText = (value?: string, englishValue?: string) => {
+    const teluguValue = value?.trim()
+    const englishText = englishValue?.trim()
+
+    if (isEnglish) {
+      return englishText || teluguValue || ''
+    }
+
+    return teluguValue || englishText || ''
+  }
   const editionSection = getSection('editions')
   const specialSection = getSection('special')
   const storiesSection = getSection('articles')
@@ -367,9 +393,9 @@ function IndexComponent() {
   const aboutSection = getSection('aboutus')
   const issueItems: IssueItem[] = editionSection?.tiles?.length
     ? editionSection.tiles.map((tile, index) => ({
-      title: tile.title,
-      description: tile.text,
-      icon: tile.title,
+      title: getLocalizedText(tile.title, tile.titleEn),
+      description: getLocalizedText(tile.text, tile.textEn),
+      icon: getLocalizedText(tile.title, tile.titleEn) || tile.title || tile.titleEn || '',
       image: tile.image?.trim(),
       color: issueHighlights[index % issueHighlights.length].color,
     }))
@@ -377,8 +403,8 @@ function IndexComponent() {
   const specialItems = specialSection?.tiles?.length
     ? specialSection.tiles.map((tile, index) => ({
       category: specialStories[index % specialStories.length].category,
-      title: tile.title,
-      description: tile.text,
+      title: getLocalizedText(tile.title, tile.titleEn),
+      description: getLocalizedText(tile.text, tile.textEn),
       image:
         tile.image?.trim() || specialStories[index % specialStories.length].image,
       tone: specialStories[index % specialStories.length].tone,
@@ -386,7 +412,8 @@ function IndexComponent() {
     : specialStories
   const storyItems: StoryItem[] = storiesSection?.tiles?.length
     ? storiesSection.tiles.map((tile, index) => ({
-      ...tile,
+      title: getLocalizedText(tile.title, tile.titleEn),
+      text: getLocalizedText(tile.text, tile.textEn),
       image:
         tile.image?.trim() ||
         `https://images.unsplash.com/${storyCategories[index % storyCategories.length].image}?auto=format&fit=crop&w=480&q=80`,
@@ -408,11 +435,6 @@ function IndexComponent() {
             : 'హోమ్‌పేజీ విభాగాలు లోడ్ అవుతున్నాయి…'}
         </p>
       )}
-      {/* {hasSectionError && (
-        <p role="alert" className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          Homepage sections could not be loaded. Showing saved content. {sectionError.message}
-        </p>
-      )} */}
       <section className="hero grid">
         <div className="relative flex min-h-[260px] items-center justify-center overflow-hidden sm:min-h-[340px]">
           <div className="absolute inset-x-0 top-0 h-20 " />
@@ -429,13 +451,9 @@ function IndexComponent() {
           className="flex flex-col justify-center rounded-[30px] sm:p-5"
         >
           <SectionHeading eyebrow="పాఠకుల కోసం" href="#stories">
-            {isEnglish ? 'Current Issue' : editionSection?.sectionTitle || 'ఈ సంచిక'}
+            {getSectionHeading(editionSection, 'ఈ సంచిక', 'Current Issue')}
           </SectionHeading>
-          {/* <p className="mt-2 max-w-xl font-telugu text-sm leading-6 text-stone-600">
-            {editionSection?.sectionDesc ||
-              'మీకు ఇష్టమైన...'}
-          </p> */}
-
+ 
           <div className="">
             {issueItems.map((item, index) => (
               <article key={item.title} className="flex items-center gap-3 border border-stone-100  px-2">
@@ -532,7 +550,7 @@ function IndexComponent() {
       <section id="special-section" className="special-section">
         <div className="section-heading">
           <SectionHeading eyebrow="పాఠకుల కోసం" href="#special-section">
-            {isEnglish ? 'Swati Specials' : specialSection?.sectionTitle || 'స్వాతి ప్రత్యేకం'}
+            {getSectionHeading(specialSection, 'స్వాతి ప్రత్యేకం', 'Swati Specials')}
           </SectionHeading>
           <a href="/special">
             {isEnglish ? 'More special stories' : 'మరిన్ని ప్రత్యేకం'} <ArrowRight size={14} />
@@ -582,7 +600,7 @@ function IndexComponent() {
       <section id="stories" className="stories-section">
         <div className="section-heading">
           <SectionHeading eyebrow="చదవండి · తెలుసుకోండి" href="#stories">
-            {isEnglish ? 'Stories' : storiesSection?.sectionTitle || 'కథనాలు'}
+            {getSectionHeading(storiesSection, 'కథనాలు', 'Stories')}
           </SectionHeading>
           <a href="/editions">
             {isEnglish ? 'More stories' : 'మరిన్ని కథనాలు'} <ArrowRight size={14} />
@@ -620,13 +638,13 @@ function IndexComponent() {
       >
         <div className="flex flex-col justify-center p-7 sm:p-10">
           <SectionHeading eyebrow="మన గురించి" href="#journey">
-            {isEnglish ? 'About Swati' : journeySection?.sectionTitle || 'స్వాతి గురించి'}
+            {getSectionHeading(journeySection, 'స్వాతి గురించి', 'About Swati')}
           </SectionHeading>
           <p className="mt-2 text-2xl font-semibold tracking-[0.12em] text-stone-500">
-            {journeyTile?.title || '1984 — 2026'}
+            {getLocalizedText(journeyTile?.title, journeyTile?.titleEn) || '1984 — 2026'}
           </p>
           <p className="mt-4 max-w-md font-telugu text-sm leading-7 text-stone-600">
-            {journeyTile?.text || (isEnglish
+            {getLocalizedText(journeyTile?.text, journeyTile?.textEn) || (isEnglish
               ? "Swati's journey continues with the love of Telugu families, stories and memories…"
               : 'తెలుగు కుటుంబాల ప్రేమాభిమానాలతో, కథలతో, జ్ఞాపకాలతో సాగుతున్న స్వాతి ప్రయాణం...')}
           </p>
@@ -651,10 +669,10 @@ function IndexComponent() {
         <section id="about" className="about-hero flex min-h-[210px] items-center px-5 py-5 sm:px-8 sm:py-6">
           <div className="max-w-sm">
             <SectionHeading eyebrow="మన గురించి" href="#about">
-              {isEnglish ? 'About Swati' : aboutSection?.sectionTitle || 'స్వాతి గురించి'}
+              {getSectionHeading(aboutSection, 'స్వాతి గురించి', 'About Swati')}
             </SectionHeading>
             <p className="mt-3 font-telugu text-sm leading-6 text-stone-700">
-              {aboutTile?.title || aboutTile?.text || (isEnglish
+              {getLocalizedText(aboutTile?.title, aboutTile?.titleEn) || getLocalizedText(aboutTile?.text, aboutTile?.textEn) || (isEnglish
                 ? "The story of Swati's 43-year journey alongside Telugu families…"
                 : '43 సంవత్సరాలుగా తెలుగు కుటుంబాలతో కలిసి ప్రయాణిస్తున్న స్వాతి కథ...')}
             </p>

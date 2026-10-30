@@ -13,6 +13,7 @@ import {
 } from '../lib/subscriptionApi'
 
 type SubscriptionPlan = {
+  PlanPriceId?: string | number | null
   PlanName: string
   Price: string | number
   Courier_Price?: string | number | null
@@ -140,7 +141,7 @@ const pageCopy = {
     orderConfirmed: 'మీ ఆర్డర్',
     confirmed: 'నిర్ధారించబడింది.',
     countriesUnavailable: 'సభ్యత్వాల కోసం ప్రస్తుతం క్రియాశీల దేశాలు అందుబాటులో లేవు.',
-    invalidCustomerDetails: 'దయచేసి మీ పేరు, సరైన ఇమెయిల్ చిరునామా, ఫోన్ నంబర్ నమోదు చేయండి.',
+    invalidCustomerDetails: 'దయచేసి సరైన పేరు, ఇమెయిల్ చిరునామా, 7–15 అంకెల ఫోన్ నంబర్ నమోదు చేయండి.',
     pricingUnavailable: 'ఈ ప్లాన్ ధర అందుబాటులో లేదు. దయచేసి మరో ప్లాన్ ఎంచుకోండి.',
     paymentUnavailable: 'చెల్లింపు ధృవీకరించలేకపోయాము. దయచేసి మళ్లీ ప్రయత్నించండి.',
     paymentFailed: 'చెల్లింపు విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.',
@@ -205,7 +206,7 @@ const pageCopy = {
     orderConfirmed: 'Your order',
     confirmed: 'has been confirmed.',
     countriesUnavailable: 'No active countries are available for subscriptions.',
-    invalidCustomerDetails: 'Please enter your name, a valid email address, and phone number.',
+    invalidCustomerDetails: 'Enter a valid name, email address, and phone number with 7–15 digits.',
     pricingUnavailable: 'Pricing is unavailable for this plan. Please choose another plan.',
     paymentUnavailable: 'Unable to verify the payment.',
     paymentFailed: 'Payment failed. Please try again.',
@@ -330,12 +331,27 @@ function SubscriptionPage() {
     const fullName = String(formData.get('fullName') || '').trim()
     const email = String(formData.get('email') || '').trim()
     const phone = String(formData.get('phone') || '').trim()
-    if (!fullName || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || !phone) {
+    const phoneDigits = phone.replace(/\D/g, '')
+    if (
+      fullName.length < 2 ||
+      fullName.length > 100 ||
+      email.length > 254 ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
+      !/^\+?[\d\s().-]+$/.test(phone) ||
+      phoneDigits.length < 7 ||
+      phoneDigits.length > 15
+    ) {
       setCheckoutError(copy.invalidCustomerDetails)
       return
     }
 
     const { offer, plan } = selectedOffer
+    const planPriceId = plan.PlanPriceId
+    if (planPriceId == null || String(planPriceId).trim() === '') {
+      setCheckoutError(copy.pricingUnavailable)
+      return
+    }
+
     const subscriptionPrice = Number(plan.Price)
     const courierPrice = Number(plan.Courier_Price)
     const hasCourier = Number.isFinite(courierPrice) && courierPrice > 0
@@ -363,6 +379,7 @@ function SubscriptionPage() {
       const edition = getPlanEdition(offer.Title)
       const checkout = await createSubscriptionCheckout({
         planId,
+        planPriceId,
         planSlug: offerSlug || planId,
         amount,
         countryCode: country.countrycode?.trim(),
@@ -375,10 +392,10 @@ function SubscriptionPage() {
           fullName,
           email,
           phone,
-          address: String(formData.get('address') || ''),
-          city: String(formData.get('city') || ''),
-          state: String(formData.get('state') || ''),
-          postalCode: String(formData.get('postalCode') || ''),
+          address: String(formData.get('address') || '').trim(),
+          city: String(formData.get('city') || '').trim(),
+          state: String(formData.get('state') || '').trim(),
+          postalCode: String(formData.get('postalCode') || '').trim(),
           country: getCountryName(country.countrycode),
         },
       })
@@ -516,31 +533,31 @@ function SubscriptionPage() {
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <label className="grid gap-1 text-xs font-medium text-stone-700">
                   {copy.name}
-                  <input name="fullName" autoComplete="name" required className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                  <input name="fullName" autoComplete="name" required minLength={2} maxLength={100} className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
                 </label>
                 <label className="grid gap-1 text-xs font-medium text-stone-700">
                   {copy.email}
-                  <input name="email" type="email" autoComplete="email" required className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                  <input name="email" type="email" autoComplete="email" required maxLength={254} className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
                 </label>
                 <label className="grid gap-1 text-xs font-medium text-stone-700 sm:col-span-2">
                   {copy.phone}
-                  <input name="phone" type="tel" autoComplete="tel" required className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                  <input name="phone" type="tel" autoComplete="tel" required maxLength={30} className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
                 </label>
                 <label className="grid gap-1 text-xs font-medium text-stone-700 sm:col-span-2">
                   {copy.address}
-                  <textarea name="address" autoComplete="street-address" rows={2} className="rounded-md border border-stone-300 bg-stone-50 px-3 py-2 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                  <textarea name="address" autoComplete="street-address" rows={2} maxLength={300} className="rounded-md border border-stone-300 bg-stone-50 px-3 py-2 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
                 </label>
                 <label className="grid gap-1 text-xs font-medium text-stone-700">
                   {copy.city}
-                  <input name="city" autoComplete="address-level2" className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                  <input name="city" autoComplete="address-level2" maxLength={100} className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
                 </label>
                 <label className="grid gap-1 text-xs font-medium text-stone-700">
                   {copy.state}
-                  <input name="state" autoComplete="address-level1" className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                  <input name="state" autoComplete="address-level1" maxLength={100} className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
                 </label>
                 <label className="grid gap-1 text-xs font-medium text-stone-700">
                   {copy.postalCode}
-                  <input name="postalCode" autoComplete="postal-code" className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                  <input name="postalCode" autoComplete="postal-code" maxLength={20} className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
                 </label>
                 <label className="grid gap-1 text-xs font-medium text-stone-700">
                   {copy.checkoutCountry}
