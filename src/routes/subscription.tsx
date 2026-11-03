@@ -13,7 +13,7 @@ import {
 } from '../lib/subscriptionApi'
 
 type SubscriptionPlan = {
-  PlanPriceId?: string | number | null
+  PlanPriceId: string | number
   PlanName: string
   Price: string | number
   Courier_Price?: string | number | null
@@ -369,7 +369,8 @@ function SubscriptionPage() {
       if (!window.Razorpay) throw new Error(copy.paymentStartFailed)
 
       const offerSlug = offer.Title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-      const planId = offerSlug || `subscription-${plan.PlanName.toLowerCase().replace(/\s+/g, '-')}`
+      // const planId = offerSlug || `subscription-${plan.PlanName.toLowerCase().replace(/\s+/g, '-')}`
+      const planId = `${plan.PlanPriceId}`
       const normalizedPlanName = plan.PlanName.toLowerCase()
       const term = normalizedPlanName.includes('year')
         ? 'oneYear'
@@ -379,7 +380,6 @@ function SubscriptionPage() {
       const edition = getPlanEdition(offer.Title)
       const checkout = await createSubscriptionCheckout({
         planId,
-        planPriceId,
         planSlug: offerSlug || planId,
         amount,
         countryCode: country.countrycode?.trim(),

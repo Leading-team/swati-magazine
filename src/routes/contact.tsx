@@ -4,8 +4,10 @@ import { ArrowRight, Mail, Megaphone, Send, Users } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import aboutUsImage from '../assets/aboutus_img.png'
 import { useLanguage } from '../lib/language'
-import { getContactEmailDetails, submitContactEnquiry } from '../lib/subscriptionApi'
-
+ import { getContactEmailDetails, submitContactEnquiry } from '../lib/subscriptionApi'
+const API_BASE_URL = 
+  import.meta.env.VITE_API_URL?.trim().replace(/\/+$/, '') ||
+  'https://swati-webapi-fhhjgcejfxhygre5.centralindia-01.azurewebsites.net/api'
 type ContactEmailDetail = {
   id: number
   description: string
@@ -139,9 +141,17 @@ function ContactPage() {
   const text = copy[language]
   const [selectedEnquiry, setSelectedEnquiry] = useState(enquiryOptions[0].value)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [successMessage, setSuccessMessage] = useState('')
+  const [errorMessage, setErrorMessage] = useState('')
   const [submitError, setSubmitError] = useState('')
   const [submitSuccess, setSubmitSuccess] = useState('')
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<ContactField, string>>>({})
+  const [formData, setFormData] = useState({
+  name: '',
+  email: '',
+  phone: '',
+  message: '',
+});
   const contactsQuery = useQuery<ContactEmailDetail[]>({
     queryKey: ['contactEmailDetails'],
     queryFn: ({ signal }) => getContactEmailDetails({ signal }),
@@ -208,12 +218,13 @@ function ContactPage() {
       return
     }
 
-    const name = String(formData.get('name') ?? '').trim()
+    const fullName = String(formData.get('name') ?? '').trim()
     const email = String(formData.get('email') ?? '').trim()
     const phone = String(formData.get('phone') ?? '').trim()
+    const subject = String(formData.get('subject') ?? '').trim()
     const message = String(formData.get('message') ?? '').trim()
-    const values: Record<ContactField, string> = {
-      name,
+    /*const values: Record<ContactField, string> = {
+      fullName,
       email,
       phone,
       enquiryType: String(formData.get('enquiryType') ?? ''),
@@ -254,6 +265,84 @@ function ContactPage() {
     } finally {
       setIsSubmitting(false)
     }
+  }*/
+ if (!fullName || !email || !phone  || !message) {
+      window.alert(text.required)
+      return
+    }
+
+    const body = [
+      `${text.fullName}: ${fullName}`,
+      `${text.email}: ${email}`,
+      `${text.phone}: ${phone}`,
+      `${text.enquiry}: ${language === 'en' ? option.english : option.telugu}`,
+      '',
+      message,
+    ].join('\n')
+setSuccessMessage('');
+    const payload = {
+  fullName,
+  email,
+  phone,
+  enquiryType:
+    language === 'en' ? option.english : option.telugu,
+  message
+}
+ try {
+    setIsSubmitting(true)
+    setSuccessMessage('')
+    setErrorMessage('')
+
+    const response = await fetch(
+      `${API_BASE_URL}/ContactUs/Submit`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }
+    )
+
+    const result = await response.json()
+
+    if (!response.ok || !result.success) {
+      throw new Error(
+        result.message || 'Unable to submit your enquiry.'
+      )
+    }
+
+    setSuccessMessage(
+      language === 'en'
+        ? 'Thank you! Your enquiry has been submitted successfully.'
+        : 'ధన్యవాదాలు! మీ విచారణ విజయవంతంగా సమర్పించబడింది.'
+    )
+setFormData({
+  name: '',
+  email: '',
+  phone: '',
+  message: '',
+});
+    //formElement.reset()
+    setSelectedEnquiry(enquiryOptions[0].value)
+
+  } catch (error) {
+    // setErrorMessage(
+    //   error instanceof Error
+    //     ? error.message
+    //     : 'Something went wrong. Please try again.'
+    //)
+    setErrorMessage(
+    language === 'en'
+      ? 'Sorry, something went wrong. Please try again later.'
+      : 'క్షమించండి, ఏదో సమస్య ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి.'
+  );
+  } finally {
+    setIsSubmitting(false)
+  }
+    
+    //window.location.href = `mailto:${recipient}?${new URLSearchParams({ subject, body })}`
   }
 
   return (
@@ -420,16 +509,17 @@ function ContactPage() {
               />
               {fieldErrors.message && <span id="contact-message-error" className="text-xs font-normal text-red-700">{fieldErrors.message}</span>}
             </label>
-            {submitError && (
-              <p role="alert" className="rounded-md bg-red-50 p-3 text-sm text-red-800">
-                {submitError}
-              </p>
-            )}
-            {submitSuccess && (
-              <p role="status" className="rounded-md bg-green-50 p-3 text-sm text-green-800">
-                {submitSuccess}
-              </p>
-            )}
+                      {successMessage && (
+  <div className="success-message" role="alert">
+    <span className="success-icon">✓</span>
+    {successMessage}
+  </div>
+)}
+{errorMessage && (
+  <div className="error-message" role="alert">
+    ✕ {errorMessage}
+  </div>
+)}
             <div className="flex flex-col gap-3 pt-1 sm:flex-row sm:items-center sm:justify-between">
               <p className="text-xs leading-5 text-stone-500">{text.emailNote}</p>
               <button

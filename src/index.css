@@ -109,6 +109,32 @@ html {
   display: block;
   clip-path: inset(9px);
 }
+.success-message {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  background-color: #e8f7ed;
+  border: 1px solid #a5d6b2;
+  border-radius: 8px;
+  color: #176b35;
+  font-size: 15px;
+  font-weight: 500;
+}
+.error-message {
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  background: #fdecec;
+  border: 1px solid #f5b5b5;
+  border-radius: 8px;
+  color: #b42318;
+}
+.success-icon {
+  font-size: 20px;
+  font-weight: bold;
+}
+
 
 .section-heading { display: flex; align-items: center; justify-content: space-between; }
 .section-heading > a { font-weight: bold; display: inline-flex; gap: 4px; align-items: center; color: #B91C1C; font-size: 11px; white-space: nowrap; }
