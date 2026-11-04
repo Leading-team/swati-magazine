@@ -83,11 +83,40 @@ function IndexComponent() {
     retry: false,
     staleTime: 5 * 60 * 1000,
   })
-  const sections = (sectionDetails?.length ? sectionDetails : fallbackSectionDetails).flatMap(
+  const fetchedActiveContactDetails = hasContactDetailsError
+    ? []
+    : contactDetails?.filter((contact) => contact.active) ?? []
+  const hasSectionData =
+    !hasSectionError &&
+    (sectionDetails?.some((menu) => Array.isArray(menu.sections) && menu.sections.length > 0) ?? false)
+  const isLoadingHomepageData = isLoadingSections || isLoadingContactDetails
+  const isUsingStaticContent =
+    hasSectionError ||
+    !hasSectionData ||
+    hasContactDetailsError ||
+    fetchedActiveContactDetails.length === 0
+
+  if (isLoadingHomepageData) {
+    return (
+      <div className="homePage flex min-h-[60vh] flex-col items-center justify-center gap-5 px-4" role="status" aria-live="polite">
+        <div className="relative flex h-24 w-24 items-center justify-center">
+          <span aria-hidden="true" className="absolute inset-0 rounded-full border-4 border-rose-100" />
+          <span aria-hidden="true" className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-r-brand-crimson border-t-brand-crimson motion-reduce:animate-none" />
+          <span aria-hidden="true" className="absolute inset-3 animate-pulse rounded-full bg-rose-50 motion-reduce:animate-none" />
+          <span className="relative font-telugu text-lg font-bold text-brand-crimson">
+            {isEnglish ? 'Swati' : 'స్వాతి'}
+          </span>
+        </div>
+        <p className="font-telugu text-sm font-medium text-stone-600">
+          {isEnglish ? 'Loading the latest content…' : 'తాజా సమాచారం లోడ్ అవుతోంది…'}
+        </p>
+      </div>
+    )
+  }
+
+  const sections = (hasSectionData ? sectionDetails ?? [] : fallbackSectionDetails).flatMap(
     (menu) => (Array.isArray(menu.sections) ? menu.sections : []),
   )
-  const fetchedActiveContactDetails =
-    contactDetails?.filter((contact) => contact.active) ?? []
   const activeContactDetails = fetchedActiveContactDetails.length
     ? fetchedActiveContactDetails
     : fallbackContactDetails
@@ -160,25 +189,11 @@ function IndexComponent() {
   return (
     <div className="homePage">
       <h1 className="sr-only">{isEnglish ? 'Swati Magazine' : 'స్వాతి పత్రిక'}</h1>
-      {isLoadingSections && (
-        <p role="status" className="rounded-lg bg-white px-4 py-3 text-sm text-stone-600">
-          {isEnglish
-            ? 'Homepage sections are loading…'
-            : 'హోమ్‌పేజీ విభాగాలు లోడ్ అవుతున్నాయి…'}
-        </p>
-      )}
-      {hasSectionError && (
+      {isUsingStaticContent && (
         <p role="status" className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
           {isEnglish
-            ? 'Homepage sections could not be loaded. Showing available fallback content.'
-            : 'హోమ్‌పేజీ విభాగాలను లోడ్ చేయలేకపోయాము. అందుబాటులో ఉన్న ప్రత్యామ్నాయ కంటెంట్‌ను చూపిస్తున్నాము.'}
-        </p>
-      )}
-      {hasContactDetailsError && (
-        <p role="status" className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
-          {isEnglish
-            ? 'Contact details could not be loaded. Showing available fallback details.'
-            : 'సంప్రదింపు వివరాలను లోడ్ చేయలేకపోయాము. అందుబాటులో ఉన్న ప్రత్యామ్నాయ వివరాలను చూపిస్తున్నాము.'}
+            ? 'Server error. Loading static content.'
+            : 'సర్వర్ లోపం. స్థిర కంటెంట్‌ను లోడ్ చేస్తున్నాము.'}
         </p>
       )}
       <section className="hero grid">

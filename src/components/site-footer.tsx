@@ -3,10 +3,10 @@ import { Facebook, Instagram, Linkedin, Youtube } from 'lucide-react'
 import wordmarkImage from '../assets/header-wordmark.jpg'
 
 const socialLinks = [
-  { label: 'Instagram', href: '#instagram', icon: Instagram },
-  { label: 'Facebook', href: '#facebook', icon: Facebook },
-  { label: 'YouTube', href: '#youtube', icon: Youtube },
-  { label: 'LinkedIn', href: '#linkedin', icon: Linkedin },
+  { label: 'Instagram', icon: Instagram },
+  { label: 'Facebook', icon: Facebook },
+  { label: 'YouTube', icon: Youtube },
+  { label: 'LinkedIn', icon: Linkedin },
 ]
 
 export function SiteFooter() {
@@ -25,15 +25,15 @@ export function SiteFooter() {
           aria-label="Social media"
           className="flex items-center justify-center gap-3"
         >
-          {socialLinks.map(({ label, href, icon: Icon }) => (
-            <a
+          {socialLinks.map(({ label, icon: Icon }) => (
+            <span
               key={label}
-              href={href}
               aria-label={label}
-              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 text-white/90 transition hover:border-white hover:bg-white hover:text-brand-crimson"
+              title={label}
+              className="flex h-9 w-9 items-center justify-center rounded-full border border-white/30 text-white/90"
             >
               <Icon className="h-4 w-4" />
-            </a>
+            </span>
           ))}
         </nav>
 

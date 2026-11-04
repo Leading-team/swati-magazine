@@ -57,8 +57,7 @@ export const Route = createFileRoute("/about")({
           <div className="md:col-span-5 lg:col-span-4 md:sticky md:top-24">
             <div className="eyebrow mb-3">Editorial Leadership</div>
             <Link
-              to="/authors/$slug"
-              params={{ slug: "vemuri-balaram" }}
+              to="/inspirations"
               className="group block text-center bg-paper border border-rule rounded-2xl p-4 shadow-sm hover:shadow-xl hover:border-primary transition-all duration-300"
             >
               {/* Single Image */}
@@ -83,7 +82,7 @@ export const Route = createFileRoute("/about")({
               </p>
 
               <div className="mt-4 pt-3 border-t border-rule/60 inline-flex items-center gap-1.5 text-xs font-semibold text-primary group-hover:underline">
-                <BookOpen className="h-3.5 w-3.5" /> View Profile & Inbuilt PDF{" "}
+                <BookOpen className="h-3.5 w-3.5" /> View editorial profiles{" "}
                 <ArrowRight className="h-3 w-3" />
               </div>
             </Link>

@@ -208,17 +208,39 @@ function ContactPage() {
 
     const form = event.currentTarget
     const formData = new FormData(form)
-    const option = enquiryOptions.find((item) => item.value === selectedEnquiry)
-    if (!option) {
-      setSubmitError(text.submitFailed)
-      return
-    }
-
     const fullName = String(formData.get('name') ?? '').trim()
     const email = String(formData.get('email') ?? '').trim()
     const phone = String(formData.get('phone') ?? '').trim()
-    const subject = String(formData.get('subject') ?? '').trim()
     const message = String(formData.get('message') ?? '').trim()
+    const values: Record<ContactField, string> = {
+      name: fullName,
+      email,
+      phone,
+      enquiryType: String(formData.get('enquiryType') ?? ''),
+      message,
+    }
+    const errors: Partial<Record<ContactField, string>> = {}
+    const fields: ContactField[] = ['name', 'email', 'phone', 'enquiryType', 'message']
+    for (const field of fields) {
+      const error = validateField(field, values[field])
+      if (error) errors[field] = error
+    }
+    setFieldErrors(errors)
+    if (Object.keys(errors).length > 0) {
+      setErrorMessage('')
+      setSuccessMessage('')
+      form.querySelector<HTMLElement>(`[name="${fields.find((field) => errors[field])}"]`)?.focus()
+      return
+    }
+
+    const option = enquiryOptions.find((item) => item.value === values.enquiryType)
+    if (!option) {
+      setFieldErrors({ enquiryType: text.enquiryInvalid })
+      setErrorMessage('')
+      setSuccessMessage('')
+      form.querySelector<HTMLElement>('[name="enquiryType"]')?.focus()
+      return
+    }
     /*const values: Record<ContactField, string> = {
       fullName,
       email,
@@ -262,12 +284,6 @@ function ContactPage() {
       setIsSubmitting(false)
     }
   }*/
- if (!fullName || !email || !phone  || !message) {
-      setErrorMessage(text.required)
-      setSuccessMessage('')
-      return
-    }
-
     const body = [
       `${text.fullName}: ${fullName}`,
       `${text.email}: ${email}`,
