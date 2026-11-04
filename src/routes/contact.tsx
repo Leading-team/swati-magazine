@@ -88,7 +88,7 @@ const copy = {
     submit: 'Submit Enquiry',
     emailNote: 'Your message will be sent securely.',
     required: 'Please fill in all required fields.',
-    nameInvalid: 'Enter a name between 2 and 100 characters.',
+    nameInvalid: 'Enter a name between 2 and 150 characters.',
     emailInvalid: 'Enter a valid email address.',
     phoneInvalid: 'Enter a valid mobile number.',
     enquiryInvalid: 'Choose a valid enquiry type.',
@@ -113,7 +113,7 @@ const copy = {
     submit: 'విచారణ పంపండి',
     emailNote: 'మీ సందేశం సురక్షితంగా పంపబడుతుంది.',
     required: 'దయచేసి అన్ని తప్పనిసరి వివరాలను నమోదు చేయండి.',
-    nameInvalid: '2 నుండి 100 అక్షరాల మధ్య పేరు నమోదు చేయండి.',
+    nameInvalid: '2 నుండి 150 అక్షరాల మధ్య పేరు నమోదు చేయండి.',
     emailInvalid: 'సరైన ఇమెయిల్ చిరునామా నమోదు చేయండి.',
     phoneInvalid: '+91 దేశ కోడ్‌తో లేదా లేకుండా, 6–9తో ప్రారంభమయ్యే 10 అంకెల భారతీయ మొబైల్ నంబర్ నమోదు చేయండి.',
     enquiryInvalid: 'సరైన విచారణ రకాన్ని ఎంచుకోండి.',
@@ -163,7 +163,7 @@ function ContactPage() {
     const trimmedValue = value.trim()
     switch (field) {
       case 'name':
-        return trimmedValue.length >= 2 && trimmedValue.length <= 100
+        return trimmedValue.length >= 2 && trimmedValue.length <= 150
           ? ''
           : text.nameInvalid
       case 'email':
@@ -407,7 +407,7 @@ setSuccessMessage('');
                   name="name"
                   autoComplete="name"
                   required
-                  maxLength={100}
+                  maxLength={150}
                   aria-invalid={Boolean(fieldErrors.name)}
                   aria-describedby={fieldErrors.name ? 'contact-name-error' : undefined}
                   onBlur={(event) => updateFieldError('name', event.currentTarget.value)}
@@ -445,6 +445,7 @@ setSuccessMessage('');
                 <input
                   name="phone"
                   type="tel"
+                  inputMode="tel"
                   autoComplete="tel"
                   required
                   maxLength={30}
@@ -452,7 +453,9 @@ setSuccessMessage('');
                   aria-describedby={fieldErrors.phone ? 'contact-phone-error' : undefined}
                   onBlur={(event) => updateFieldError('phone', event.currentTarget.value)}
                   onChange={(event) => {
-                    if (fieldErrors.phone) updateFieldError('phone', event.currentTarget.value)
+                    const input = event.currentTarget
+                    input.value = input.value.replace(/[^\d\s().+-]/g, '').replace(/(?!^)\+/g, '')
+                    if (fieldErrors.phone) updateFieldError('phone', input.value)
                   }}
                   className="h-11 rounded-md border border-stone-300 bg-white px-3 text-sm font-normal outline-none transition placeholder:text-stone-400 focus:border-brand-crimson focus:ring-2 focus:ring-brand-crimson/10"
                   placeholder={text.phone}

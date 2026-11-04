@@ -345,7 +345,7 @@ function SubscriptionPage() {
 
     if (
       fullName.length < 2 ||
-      fullName.length > 100 ||
+      fullName.length > 150 ||
       email.length > 254 ||
       !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ||
       !/^\+?[\d\s().-]+$/.test(phone) ||
@@ -544,7 +544,7 @@ function SubscriptionPage() {
               <div className="mt-4 grid gap-3 sm:grid-cols-2">
                 <label className="grid gap-1 text-xs font-medium text-stone-700">
                   {copy.name}
-                  <input name="fullName" autoComplete="name" required minLength={2} maxLength={100} className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                  <input name="fullName" autoComplete="name" required minLength={2} maxLength={150} className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
                 </label>
                 <label className="grid gap-1 text-xs font-medium text-stone-700">
                   {copy.email}
@@ -552,7 +552,18 @@ function SubscriptionPage() {
                 </label>
                 <label className="grid gap-1 text-xs font-medium text-stone-700 sm:col-span-2">
                   {copy.phone}
-                  <input name="phone" type="tel" autoComplete="tel" required maxLength={30} className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson" />
+                  <input
+                    name="phone"
+                    type="tel"
+                    inputMode="tel"
+                    autoComplete="tel"
+                    required
+                    maxLength={30}
+                    onChange={(event) => {
+                      event.currentTarget.value = event.currentTarget.value.replace(/[^\d+\s().-]/g, '')
+                    }}
+                    className="h-10 rounded-md border border-stone-300 bg-stone-50 px-3 text-sm focus:border-brand-crimson focus:outline-none focus:ring-1 focus:ring-brand-crimson"
+                  />
                 </label>
                 <label className="grid gap-1 text-xs font-medium text-stone-700 sm:col-span-2">
                   {copy.address}
