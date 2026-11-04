@@ -759,11 +759,6 @@ function SubscriptionPage() {
                         <p className="font-serif text-2xl font-bold leading-tight text-stone-900 sm:text-3xl">
                           {selectedPlan ? formatPrice(Number(selectedPlan.Price), country) : '—'}
                         </p>
-                        {Number(selectedPlan?.Courier_Price) > 0 && (
-                          <p className="mt-1 text-[10px] leading-4 text-stone-500">
-                            + {copy.courier}: {formatPrice(Number(selectedPlan?.Courier_Price), country)}
-                          </p>
-                        )}
                       </div>
                     </div>
                   </div>
@@ -811,8 +806,7 @@ function SubscriptionPage() {
         </div>
       )}
 
-      {!selectedOffer && (
-        <section className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-8">
+        {/* <section className="rounded-2xl border border-stone-200 bg-white p-6 sm:p-8">
           <h2 className="font-telugu text-2xl font-bold text-stone-900">{copy.faqTitle}</h2>
           <div className="mt-5 grid gap-6 sm:grid-cols-2">
             {copy.faqs.map(([question, answer]) => (
@@ -822,8 +816,8 @@ function SubscriptionPage() {
               </article>
             ))}
           </div>
-        </section>
-      )}
+        </section> */}
+
 
     </div>
   )

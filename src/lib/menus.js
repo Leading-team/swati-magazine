@@ -12,6 +12,9 @@ function extractMenus(payload) {
   throw new Error('The menu service returned an unexpected response.')
 }
 
+/**
+ * @param {{ language?: string, signal?: AbortSignal }} options
+ */
 export async function getAllMenus({ language = 'te', signal } = {}) {
   const url = new URL(`${API_BASE_URL}/menulist/GetAllMenus`)
   url.searchParams.set('language', language)

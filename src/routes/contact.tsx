@@ -87,6 +87,7 @@ const copy = {
     message: 'Message',
     submit: 'Submit Enquiry',
     emailNote: 'Your message will be sent securely.',
+    required: 'Please fill in all required fields.',
     nameInvalid: 'Enter a name between 2 and 100 characters.',
     emailInvalid: 'Enter a valid email address.',
     phoneInvalid: 'Enter a valid mobile number.',
@@ -111,6 +112,7 @@ const copy = {
     message: 'సందేశం',
     submit: 'విచారణ పంపండి',
     emailNote: 'మీ సందేశం సురక్షితంగా పంపబడుతుంది.',
+    required: 'దయచేసి అన్ని తప్పనిసరి వివరాలను నమోదు చేయండి.',
     nameInvalid: '2 నుండి 100 అక్షరాల మధ్య పేరు నమోదు చేయండి.',
     emailInvalid: 'సరైన ఇమెయిల్ చిరునామా నమోదు చేయండి.',
     phoneInvalid: '+91 దేశ కోడ్‌తో లేదా లేకుండా, 6–9తో ప్రారంభమయ్యే 10 అంకెల భారతీయ మొబైల్ నంబర్ నమోదు చేయండి.',
@@ -146,12 +148,6 @@ function ContactPage() {
   const [submitError, setSubmitError] = useState('')
   const [submitSuccess, setSubmitSuccess] = useState('')
   const [fieldErrors, setFieldErrors] = useState<Partial<Record<ContactField, string>>>({})
-  const [formData, setFormData] = useState({
-  name: '',
-  email: '',
-  phone: '',
-  message: '',
-});
   const contactsQuery = useQuery<ContactEmailDetail[]>({
     queryKey: ['contactEmailDetails'],
     queryFn: ({ signal }) => getContactEmailDetails({ signal }),
@@ -267,7 +263,8 @@ function ContactPage() {
     }
   }*/
  if (!fullName || !email || !phone  || !message) {
-      window.alert(text.required)
+      setErrorMessage(text.required)
+      setSuccessMessage('')
       return
     }
 
@@ -318,14 +315,9 @@ setSuccessMessage('');
         ? 'Thank you! Your enquiry has been submitted successfully.'
         : 'ధన్యవాదాలు! మీ విచారణ విజయవంతంగా సమర్పించబడింది.'
     )
-setFormData({
-  name: '',
-  email: '',
-  phone: '',
-  message: '',
-});
-    //formElement.reset()
+    form.reset()
     setSelectedEnquiry(enquiryOptions[0].value)
+    setFieldErrors({})
 
   } catch (error) {
     // setErrorMessage(

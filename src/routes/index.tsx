@@ -1,12 +1,10 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, Link } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import {
   ArrowRight,
   BookOpen,
-  CalendarDays,
   Gift,
   Home,
-  Link,
   Mail,
   Megaphone,
   PencilLine,
@@ -14,66 +12,21 @@ import {
 } from 'lucide-react'
 import currentCover from '../assets/current-cover.jpg'
 import noImage from '../assets/noimage.png'
+import {
+  fallbackContactDetails,
+  fallbackSectionDetails,
+  issueHighlights,
+  specialStories,
+  storyCategories,
+  type ContactEmailDetail,
+  type IssueItem,
+  type MenuSection,
+  type MenuSectionResponse,
+} from '../data/homepage-fallback'
 import { getMenuSectionsById } from '../lib/menus'
 import { useLanguage } from '../lib/language'
 import { getContactEmailDetails } from '../lib/subscriptionApi'
 import type { ReactNode, SyntheticEvent } from 'react'
-
-type ContactEmailDetail = {
-  id: number
-  description: string
-  email: string
-  active: boolean
-}
-
-const fallbackContactDetails: ContactEmailDetail[] = [
-  {
-    id: 1,
-    description: 'మాతో ప్రకటన చేయండి',
-    email: 'swatipublication2026@gmail.com',
-    active: true,
-  },
-  {
-    id: 2,
-    description: 'మాతో చేరండి',
-    email: 'swatipublication2026@gmail.com',
-    active: true,
-  },
-  {
-    id: 3,
-    description: 'ఇతర విచారణలు',
-    email: 'swatipublication2026@gmail.com',
-    active: true,
-  },
-]
-
-type SectionTile = {
-  title?: string
-  titleEn?: string
-  text?: string
-  textEn?: string
-  image?: string
-}
-
-type MenuSection = {
-  sectionTitle?: string
-  sectionName?: string
-  coverImage?: string
-  sectionDesc?: string
-  tiles?: SectionTile[]
-}
-
-type MenuSectionResponse = {
-  sections?: MenuSection[]
-}
-
-type IssueItem = {
-  title: string
-  description?: string
-  icon: string
-  image?: string
-  color: string
-}
 
 type StoryItem = {
   title: string
@@ -90,238 +43,18 @@ function handleImageError(event: SyntheticEvent<HTMLImageElement>) {
 export const Route = createFileRoute('/')({
   component: IndexComponent,
 })
-const fallbackSectionDetails = [
-  {
-    "menuName": "మన స్వాతి",
-    "sections": [
-      {
-        "sectionTitle": "ఈ సంచిక",
-        "sectionName": "editions",
-        "coverImage": "",
-        "tiles": [
-          {
-            "title": "రుచుల ప్రపంచం",
-            "text": "ఇండియను వంటలు,ఆరోగ్యకరమయిన ఆహరం ",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/Food.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=VsUvi5gBVKNTO%2FX3vkD5O7xJmMpTp7SWojyvKn66kpY%3D"
-          },
-          {
-            "title": "మన సంస్కృతి",
-            "text": "తెలుగు వారసత్వం,ప్రతిష్టుల నందవ్యాసం",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/temple.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=iCbZxNCkFI%2BG1bM%2BhiG3lWlpMH5uxTvfeVICX4RrKGs%3D"
-          },
-          {
-            "title": "మన కుటుంబం",
-            "text": "మహిళల ఆరోగ్యం,జీవన శైలి",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/woman.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=expHf%2FnxuLmbyri6vahGAqSLE49P52Jni7zHlxTpmo0%3D"
-          },
-          {
-            "title": "పిల్లల ప్రపంచం",
-            "text": "పిల్లల కోసం ప్రత్యేక కథనాలు,చిట్టాలు",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/family.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=ogDIrc63YXl3LgI%2B1ST7HR0SpSC%2FmA0fqk%2FGqVdtZxM%3D"
-          }
-        ],
-        sectionDesc: ""
-      },
-      {
-        "sectionTitle": "స్వాతి ప్రత్యేకం",
-        "sectionName": "special",
-        "coverImage": "",
-        "tiles": [
-          {
-            "title": "2026",
-            "text": "",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/family.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=ogDIrc63YXl3LgI%2B1ST7HR0SpSC%2FmA0fqk%2FGqVdtZxM%3D"
-          },
-          {
-            "title": "అందం & ఆరోగ్యం",
-            "text": "సహజ సౌందర్యానికి చిట్కాలు",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/beauty.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=r5WySMupT0SmSPvxptJMBnAl6JhyHk9CDzRQjUMbWqs%3D"
-          },
-          {
-            "title": "కళలు & సంస్కృతి",
-            "text": "మన వారసత్వం మన గర్వం",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/arts.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=OiDWvZCaAKrh77zBw%2Boo126ISCRXuSrMb21jZCWBOyc%3D"
-          },
-          {
-            "title": "ప్రయాణం",
-            "text": "ప్రపంచ అందాల వైపు",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/journey.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=z22USjVrk%2Ffgp0nYugbEfaa%2F3ZqnMgC0RlrLBYTLPYA%3D"
-          }
-        ],
-        sectionDesc: ""
-      },
-      {
-        "sectionTitle": "కథనాలు",
-        "sectionName": "articles",
-        "coverImage": "",
-        "tiles": [
-          {
-            "title": "కుటుంబం",
-            "text": "సంబంధాలు,సంభాషణలు,సంతోషాలు",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-family.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=I0kGb5%2BQViz%2BCStXtvV9fn118rsnHAUt1d11skOnios%3D"
-          },
-          {
-            "title": "వంటలు",
-            "text": "రుచికరమయిన వంటకాలు,ఆరోగ్యకరమయిన ఆహారం",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-food.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=MqLyAG%2B04HZ4KXrvzlQUyu5GQ58IOcg6ogJCWTJp4w4%3D"
-          },
-          {
-            "title": "ఆరోగ్యం",
-            "text": "శారీరక,మానసిక ఆరోగ్యం",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-health.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=pKDy0B6p0SLMX8EkkiTqraeJ7wCjChPDz%2BXozr%2BVYJo%3D"
-          },
-          {
-            "title": "ఇల్లు అందంగా",
-            "text": "గృహ అలంకరణ,జీవన శైలి",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-house.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=0x1cAhCW2AOjJj%2Fdufj2LngoIRK%2FJQuNK2AVaAMn2bQ%3D"
-          },
-          {
-            "title": "పిల్లల కోణం",
-            "text": "పిల్లల కథలు,విద్య,వినోదం ",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-kids.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=D2wEC2zFCt9Qdw5afwtiN7oeoSxYjHVfN0%2B2Pv9gBAw%3D"
-          },
-          {
-            "title": "పుస్తకాలు",
-            "text": "పఠనం,సమీక్షలు,రచనలు ",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/story-books.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=oR5McDmxEbxemwcg3Cfnc7CvazTagK5eZXyN3YfuPfw%3D"
-          }
-        ],
-        sectionDesc: ""
-      },
-      {
-        "sectionTitle": "మా 43 ఏళ్ల ప్రయాణం",
-        "sectionName": "journey",
-        "coverImage": "",
-        "tiles": [
-          {
-            "title": "1984  -  2026",
-            "text": "తెలుగు కుటుంబాల ప్రేమాభిమానాలతో \r\n\r\n43 సంవత్సరాల స్వాతి ప్రయాణం...",
-            "image": "https://swatipportalstorage01.blob.core.windows.net/swati-sections-test/43_image.jpg?sv=2026-10-06&se=2026-10-16T10%3A27%3A54Z&sr=b&sp=r&sig=lwa6%2Fyk%2FCBBZCnF1EHByNRq3YjMSfU27BUJiOGhuESc%3D"
-          }
-        ],
-        sectionDesc: ""
-      },
-      {
-        "sectionTitle": "స్వాతి గురించి",
-        "sectionName": "aboutus",
-        "coverImage": "",
-        "tiles": [
-          {
-            "title": "43 సంవత్సరాలుగా తెలుగు కుటుంబంతో కలిసి\r\nప్రయాణిస్తున్న స్వాతి కథ... మన పాఠకుల ప్రేమ రచయితల స్ఫూర్తి, మా ప్రయాణం ఇంకా కొనసాగుతూనే ఉంది.",
-            "text": "43 సంవత్సరాలుగా తెలుగు కుటుంబంతో కలిసి ప్రయాణిస్తున్న స్వాతి కథ...",
-            "image": ""
-          }
-        ],
-        sectionDesc: ""
-      },
-      {
-        "sectionTitle": "సంప్రదించండి",
-        "sectionName": "contactus",
-        "coverImage": "",
-        "tiles": [
-          {
-            "title": "సంస్కార వికాసం",
-            "text": "క్రమశిక్షణ, బాధ్యతలు,సమాజంలో గౌరవం",
-            "image": ""
-          },
-          {
-            "title": "విద్యాభివృద్ధి కోసం",
-            "text": "పుస్తకాలు, జ్ఞానం సముపార్జన",
-            "image": ""
-          },
-          {
-            "title": "సామాజిక సమభావం",
-            "text": "ఇతర సమూహాలతో,విస్తృతాలు",
-            "image": ""
-          }
-        ],
-        sectionDesc: ""
-      }
-    ]
-  }
-];
-const issueHighlights = [
-  {
-    title: 'రుచుల ప్రపంచం',
-    description: 'ఇంటింటి వంటలు, ఆరోగ్యకరమైన ఆహారం',
-    icon: 'రుచులు',
-    color: 'bg-orange-50 text-orange-800',
-  },
-  {
-    title: 'మన సంస్కృతి',
-    description: 'తెలుగు వారసత్వం, మన సంప్రదాయాలు',
-    icon: 'సంస్కృతి',
-    color: 'bg-sky-50 text-sky-800',
-  },
-  {
-    title: 'మన కుటుంబం',
-    description: 'మహిళల ఆరోగ్యం, జీవన శైలి',
-    icon: 'కుటుంబం',
-    color: 'bg-emerald-50 text-emerald-800',
-  },
-]
-
-const specialStories = [
-  {
-    category: 'ప్రత్యేక కథనం',
-    title: 'తెరపై కొత్త వెలుగులు',
-    description: 'సినిమా ప్రపంచంలోని మధురమైన విశేషాలు',
-    image: 'https://images.unsplash.com/photo-1489599849927-2ee91c442a14?auto=format&fit=crop&w=900&q=85',
-    tone: 'from-rose-950/80',
-  },
-  {
-    category: 'ప్రయాణం',
-    title: 'ప్రపంచ అందాల వైపు',
-    description: 'మనసు దోచే ప్రదేశాల పరిచయం',
-    image: 'https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=700&q=85',
-    tone: 'from-sky-950/80',
-  },
-  {
-    category: 'ఆరోగ్యం',
-    title: 'అందం & ఆరోగ్యం',
-    description: 'ఆరోగ్యకరమైన జీవనానికి చిన్న చిట్కాలు',
-    image: 'https://images.unsplash.com/photo-1540555700478-4be289fbecef?auto=format&fit=crop&w=700&q=85',
-    tone: 'from-emerald-950/80',
-  },
-  {
-    category: 'కళలు',
-    title: 'కళలు & సంస్కృతి',
-    description: 'మన వారసత్వం, మన గర్వం',
-    image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&w=700&q=85',
-    tone: 'from-amber-950/80',
-  },
-]
-
-const storyCategories = [
-  { title: 'కుటుంబం', description: 'సంబంధాలు, అనుబంధాలు', image: 'photo-1511895426328-dc8714191300' },
-  { title: 'వంటలు', description: 'రుచికరమైన వంటకాలు', image: 'photo-1509440159596-0249088772ff' },
-  { title: 'ఆరోగ్యం', description: 'శారీరక, మానసిక ఆరోగ్యం', image: 'photo-1506126613408-eca07ce68773' },
-  { title: 'ఇల్లు అందంగా', description: 'గృహ అలంకరణ, జీవన శైలి', image: 'photo-1616486338812-3dadae4b4ace' },
-  { title: 'పిల్లల కోణం', description: 'కథలు, విద్య, వినోదం', image: 'photo-1503454537195-1dcabb73ffb9' },
-  { title: 'పుస్తకాలు', description: 'పఠనం, సమీక్షలు, రచనలు', image: 'photo-1512820790803-83ca734da794' },
-]
-
 function SectionHeading({
-  eyebrow,
   children,
-  href,
 }: {
-  eyebrow?: string
   children: ReactNode
-  href?: string
 }) {
   return (
     <div className="flex items-end justify-between gap-4 pb-2">
       <div>
-        <h1 className="mt-1 font-telugu text-2xl font-bold text-stone-950 sm:text-3xl">
+        <h2 className="mt-1 font-telugu text-2xl font-bold text-stone-950 sm:text-3xl">
           {children}
-        </h1>
+        </h2>
         <div className="h-0.5 w-9 bg-brand-crimson" />
-        {/* {eyebrow && (
-          <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.22em] text-brand-crimson/70">
-            {eyebrow}
-          </p>
-        )} */}
       </div>
     </div>
   )
@@ -334,7 +67,6 @@ function IndexComponent() {
     data: sectionDetails,
     isLoading: isLoadingSections,
     isError: hasSectionError,
-    error: sectionError,
   } = useQuery<MenuSectionResponse[]>({
     queryKey: ['menuSections', 1, language],
     queryFn: ({ signal }) => getMenuSectionsById(1, { language, signal }),
@@ -345,7 +77,6 @@ function IndexComponent() {
     data: contactDetails,
     isLoading: isLoadingContactDetails,
     isError: hasContactDetailsError,
-    error: contactDetailsError,
   } = useQuery<ContactEmailDetail[]>({
     queryKey: ['contactEmailDetails'],
     queryFn: ({ signal }) => getContactEmailDetails({ signal }),
@@ -428,11 +159,26 @@ function IndexComponent() {
 
   return (
     <div className="homePage">
+      <h1 className="sr-only">{isEnglish ? 'Swati Magazine' : 'స్వాతి పత్రిక'}</h1>
       {isLoadingSections && (
         <p role="status" className="rounded-lg bg-white px-4 py-3 text-sm text-stone-600">
           {isEnglish
             ? 'Homepage sections are loading…'
             : 'హోమ్‌పేజీ విభాగాలు లోడ్ అవుతున్నాయి…'}
+        </p>
+      )}
+      {hasSectionError && (
+        <p role="status" className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          {isEnglish
+            ? 'Homepage sections could not be loaded. Showing available fallback content.'
+            : 'హోమ్‌పేజీ విభాగాలను లోడ్ చేయలేకపోయాము. అందుబాటులో ఉన్న ప్రత్యామ్నాయ కంటెంట్‌ను చూపిస్తున్నాము.'}
+        </p>
+      )}
+      {hasContactDetailsError && (
+        <p role="status" className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
+          {isEnglish
+            ? 'Contact details could not be loaded. Showing available fallback details.'
+            : 'సంప్రదింపు వివరాలను లోడ్ చేయలేకపోయాము. అందుబాటులో ఉన్న ప్రత్యామ్నాయ వివరాలను చూపిస్తున్నాము.'}
         </p>
       )}
       <section className="hero grid">
@@ -450,7 +196,7 @@ function IndexComponent() {
           id="current-issue"
           className="flex flex-col justify-center rounded-[30px] sm:p-5"
         >
-          <SectionHeading eyebrow="పాఠకుల కోసం" href="#stories">
+          <SectionHeading>
             {getSectionHeading(editionSection, 'ఈ సంచిక', 'Current Issue')}
           </SectionHeading>
  
@@ -520,12 +266,12 @@ function IndexComponent() {
           </div>
 
           <div className="relative z-10 mt-6">
-            <a
-              href="/subscription"
+            <Link
+              to="/subscription"
               className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
             >
               {isEnglish ? 'Subscribe now' : 'సభ్యత్వం పొందండి'} <ArrowRight className="h-4 w-4" />
-            </a>
+            </Link>
 
             <div className="mt-5 grid grid-cols-3 gap-2 text-center text-[11px] font-medium text-stone-600">
               <span className="flex flex-col items-center gap-2 rounded-xl border border-stone-200 bg-brand-cream p-2">
@@ -549,12 +295,12 @@ function IndexComponent() {
 
       <section id="special-section" className="special-section">
         <div className="section-heading">
-          <SectionHeading eyebrow="పాఠకుల కోసం" href="#special-section">
+          <SectionHeading>
             {getSectionHeading(specialSection, 'స్వాతి ప్రత్యేకం', 'Swati Specials')}
           </SectionHeading>
-          <a href="/special">
+          {/* <a href="/special">
             {isEnglish ? 'More special stories' : 'మరిన్ని ప్రత్యేకం'} <ArrowRight size={14} />
-          </a>
+          </a> */}
         </div>
         <div className="grid grid-cols-2 gap-x-4 gap-y-5 xl:grid-cols-5">
           {specialItems.map((story, index) => (
@@ -599,12 +345,12 @@ function IndexComponent() {
 
       <section id="stories" className="stories-section">
         <div className="section-heading">
-          <SectionHeading eyebrow="చదవండి · తెలుసుకోండి" href="#stories">
+          <SectionHeading>
             {getSectionHeading(storiesSection, 'కథనాలు', 'Stories')}
           </SectionHeading>
-          <a href="/editions">
-            {isEnglish ? 'More stories' : 'మరిన్ని కథనాలు'} <ArrowRight size={14} />
-          </a>
+          {/* <a href="/editions">
+            {isEnglish ? 'More articles' : 'మరిన్ని కథనాలు'} <ArrowRight size={14} />
+          </a> */}
         </div>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 lg:grid-cols-6">
           {storyItems.map((story, index) => (
@@ -637,7 +383,7 @@ function IndexComponent() {
         className="grid overflow-hidden bg-[#f2e8dc] md:grid-cols-[0.85fr_1.15fr]"
       >
         <div className="flex flex-col justify-center p-7 sm:p-10">
-          <SectionHeading eyebrow="మన గురించి" href="#journey">
+          <SectionHeading>
             {getSectionHeading(journeySection, 'స్వాతి గురించి', 'About Swati')}
           </SectionHeading>
           <p className="mt-2 text-2xl font-semibold tracking-[0.12em] text-stone-500">
@@ -649,7 +395,7 @@ function IndexComponent() {
               : 'తెలుగు కుటుంబాల ప్రేమాభిమానాలతో, కథలతో, జ్ఞాపకాలతో సాగుతున్న స్వాతి ప్రయాణం...')}
           </p>
           <a
-            href="/journey"
+            
             className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
           >
             {isEnglish ? 'Explore our journey' : 'మా ప్రయాణం గురించి'} <ArrowRight className="h-4 w-4" />
@@ -668,7 +414,7 @@ function IndexComponent() {
       <div className="about-sections grid overflow-hidden border border-stone-200 md:grid-cols-[1.6fr_1fr]">
         <section id="about" className="about-hero flex min-h-[210px] items-center px-5 py-5 sm:px-8 sm:py-6">
           <div className="max-w-sm">
-            <SectionHeading eyebrow="మన గురించి" href="#about">
+            <SectionHeading>
               {getSectionHeading(aboutSection, 'స్వాతి గురించి', 'About Swati')}
             </SectionHeading>
             <p className="mt-3 font-telugu text-sm leading-6 text-stone-700">
@@ -677,7 +423,7 @@ function IndexComponent() {
                 : '43 సంవత్సరాలుగా తెలుగు కుటుంబాలతో కలిసి ప్రయాణిస్తున్న స్వాతి కథ...')}
             </p>
             <a
-              href="/about"
+              
               className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
             >
               {isEnglish ? 'Learn about us' : 'మా గురించి తెలుసుకోండి'} <ArrowRight className="h-4 w-4" />
@@ -687,7 +433,7 @@ function IndexComponent() {
 
         <section id="contact" className="flex flex-col justify-center gap-3 bg-[#fffaf5] px-5 py-5 sm:px-6">
           <div>
-            <SectionHeading eyebrow="మన గురించి" href="#contact">
+            <SectionHeading>
               {isEnglish ? 'Contact us' : 'సంప్రదించండి'}
             </SectionHeading>
             <p className="mt-1 font-telugu text-xs leading-5 text-stone-600">
