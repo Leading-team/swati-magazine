@@ -1,16 +1,10 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  ArrowRight,
-  BookOpen,
-  Heart,
-  Layers,
-  PenLine,
-  UsersRound,
-} from "lucide-react";
-import coverE1 from "../assets/E1.jpg";
+import { useQuery } from "@tanstack/react-query";
+import { createFileRoute } from "@tanstack/react-router";
+import { ArrowRight } from "lucide-react";
+import { getAllMenus, getMenuSectionsById } from "../lib/menus";
+import { useLanguage } from "../lib/language";
+import type { MenuSectionResponse } from "../data/homepage-fallback";
 import coverE2 from "../assets/E2.jpg";
-import coverE3 from "../assets/E3.jpg";
-import currentCover from "../assets/current-cover.jpg";
 import heroBook from "../assets/edition-bg.jpg";
 
 export const Route = createFileRoute("/journey")({
@@ -25,6 +19,14 @@ export const Route = createFileRoute("/journey")({
   }),
   component: JourneyPage,
 });
+
+/*
+Previous journey content retained for reference:
+import { Link } from "@tanstack/react-router";
+import { BookOpen, Heart, Layers, PenLine, UsersRound } from "lucide-react";
+import coverE1 from "../assets/E1.jpg";
+import coverE3 from "../assets/E3.jpg";
+import currentCover from "../assets/current-cover.jpg";
 
 const milestones = [
   {
@@ -78,12 +80,49 @@ const impact = [
   { icon: Layers, value: "అనేకాంశాలు", label: "విశేషాలు & సంపుటాలు" },
   { icon: Heart, value: "అనంతమైన", label: "పాఠకుల ప్రేమ" },
 ];
+*/
+
+type NavigationMenu = {
+  id: number | string
+  to: string
+}
 
 function JourneyPage() {
+  const { language } = useLanguage()
+  const menusQuery = useQuery<NavigationMenu[]>({
+    queryKey: ["menus", language],
+    queryFn: ({ signal }) => getAllMenus({ language, signal }),
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  })
+  const journeyMenu = menusQuery.data?.find(
+    (menu) => menu.to.replace(/\/+$/, "") === "/journey",
+  )
+  const journeySectionsQuery = useQuery<MenuSectionResponse[]>({
+    queryKey: ["menuSections", journeyMenu?.id, language],
+    queryFn: ({ signal }) => {
+      if (journeyMenu?.id == null) {
+        throw new Error("The Journey menu is unavailable.")
+      }
+      return getMenuSectionsById(journeyMenu.id, { language, signal })
+    },
+    enabled: journeyMenu?.id != null,
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  })
+  const images = (journeySectionsQuery.data || [])
+    .flatMap((menu) => menu.sections || [])
+    .flatMap((section) => section.tiles || [])
+    .filter((tile) => tile.image?.trim())
+    .map((tile) => ({
+      src: tile.image!.trim(),
+      alt: tile.title?.trim() || tile.titleEn?.trim() || "",
+    }))
+
   return (
     <div>
       <main className="mx-auto max-w-7xl space-y-6 px-4 py-5 sm:px-6 lg:px-8">
-        <section className="relative isolate grid min-h-72 items-center overflow-hidden rounded-lg bg-[#f8f0e5] md:grid-cols-2">
+        {/* <section className="relative isolate grid min-h-72 items-center overflow-hidden rounded-lg bg-[#f8f0e5] md:grid-cols-2">
           <img
             src={heroBook}
             alt=""
@@ -115,8 +154,9 @@ function JourneyPage() {
               మా ప్రయాణాన్ని చూడండి <ArrowRight aria-hidden="true" className="h-4 w-4" />
             </a>
           </div>
-        </section>
+        </section> */}
 
+        {/*
         <section id="milestones" className="scroll-mt-24">
           <div className="mb-5 flex items-center gap-4">
             <div>
@@ -253,6 +293,38 @@ function JourneyPage() {
             </Link>
           </div>
         </section>
+        */}
+
+        {(menusQuery.error || journeySectionsQuery.error) && (
+          <p role="alert" className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
+            {journeySectionsQuery.error?.message || menusQuery.error?.message}
+          </p>
+        )}
+        {menusQuery.isLoading || journeySectionsQuery.isLoading ? (
+          <p role="status" className="py-8 text-center text-sm text-stone-600">
+            ప్రయాణ చిత్రాలు లోడ్ అవుతున్నాయి…
+          </p>
+        ) : images.length > 0 ? (
+          <section aria-label="ప్రయాణ చిత్రాలు" className="grid grid-cols-3 items-start gap-3 py-5 sm:gap-5">
+            {images.map((image, index) => (
+              <img
+                key={`${image.src}-${index}`}
+                src={image.src}
+                alt={image.alt}
+                className="h-auto w-full"
+                loading={index < 3 ? "eager" : "lazy"}
+                decoding="async"
+              />
+            ))}
+          </section>
+        ) : (
+          !menusQuery.error &&
+          !journeySectionsQuery.error && (
+            <p className="py-8 text-center text-sm text-stone-600">
+              ప్రయాణ చిత్రాలు ప్రస్తుతం అందుబాటులో లేవు.
+            </p>
+          )
+        )}
       </main>
     </div>
   );
