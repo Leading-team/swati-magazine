@@ -4,6 +4,7 @@ import { ArrowRight, Check, Loader2, ShieldCheck, Sparkles } from 'lucide-react'
 import { useState, type FormEvent, type SyntheticEvent } from 'react'
 import noImage from '../assets/noimage.png'
 import { useLanguage } from '../lib/language'
+import { isCancellationError } from '../lib/errors'
 import {
   createSubscriptionCheckout,
   getSubscriptionCountries,
@@ -451,9 +452,11 @@ function SubscriptionPage() {
             setSuccessOrder(payment.razorpay_order_id)
             setSelectedOffer(null)
           } catch (error) {
-            setCheckoutError(
-              error instanceof Error ? error.message : copy.paymentUnavailable,
-            )
+            if (!isCancellationError(error)) {
+              setCheckoutError(
+                error instanceof Error ? error.message : copy.paymentUnavailable,
+              )
+            }
           } finally {
             setIsCheckingOut(false)
           }
@@ -472,7 +475,9 @@ function SubscriptionPage() {
       })
       razorpay.open()
     } catch (error) {
-      setCheckoutError(error instanceof Error ? error.message : copy.paymentStartFailed)
+      if (!isCancellationError(error)) {
+        setCheckoutError(error instanceof Error ? error.message : copy.paymentStartFailed)
+      }
       setIsCheckingOut(false)
     }
   }
@@ -515,10 +520,10 @@ function SubscriptionPage() {
           <Loader2 className="h-5 w-5 animate-spin" />
           {copy.loading}
         </div>
-      ) : pageError ? (
-        <p role="alert" className="rounded-xl bg-amber-50 p-4 text-sm text-amber-900">
-          {pageError.message}
-        </p>
+      // ) : pageError ? (
+      //   <p role="alert" className="rounded-xl bg-amber-50 p-4 text-sm text-amber-900">
+      //     {pageError.message}
+      //   </p>
       ) : !country ? (
         <p role="alert" className="rounded-xl bg-amber-50 p-4 text-sm text-amber-900">
           {copy.countriesUnavailable}
@@ -835,7 +840,7 @@ function SubscriptionPage() {
         </section>
       )}
 
-      {languagesQuery.error && (
+      {languagesQuery.error && !isCancellationError(languagesQuery.error) && (
         <p role="status" className="text-sm text-amber-800">
           భాషల జాబితాను లోడ్ చేయలేకపోయాము: {languagesQuery.error.message}
         </p>

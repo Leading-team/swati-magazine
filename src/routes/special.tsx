@@ -169,11 +169,11 @@ function SpecialPage() {
         </section>
         */}
 
-        {(menusQuery.error || specialSectionsQuery.error) && (
+        {/* {(menusQuery.error || specialSectionsQuery.error) && (
           <p role="alert" className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
             {specialSectionsQuery.error?.message || menusQuery.error?.message}
           </p>
-        )}
+        )} */}
         {menusQuery.isLoading || specialSectionsQuery.isLoading ? (
           <p role="status" className="py-8 text-center text-sm text-stone-600">
             ప్రత్యేక చిత్రాలు లోడ్ అవుతున్నాయి…

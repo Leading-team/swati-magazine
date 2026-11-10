@@ -4,6 +4,7 @@ import { Menu } from 'lucide-react'
 import { useState } from 'react'
 import { useLanguage } from '../lib/language'
 import { getAllMenus, getMenuSectionsById } from '../lib/menus'
+import { isCancellationError } from '../lib/errors'
 import brandImage from '../assets/header-brand.jpg'
 import wordmarkImage from '../assets/header-wordmark.jpg'
 
@@ -88,6 +89,7 @@ export function SiteHeader() {
           getMenuSectionsById(item.id, { language, signal }),
         staleTime: 5 * 60 * 1000,
       }).catch((requestError: unknown) => {
+        if (isCancellationError(requestError)) return
         setMenuDetailsError(
           requestError instanceof Error
             ? requestError.message

@@ -11,6 +11,7 @@ import {
 } from "lucide-react";
 import { getAllMenus, getMenuSectionsById } from "../lib/menus";
 import { useLanguage } from "../lib/language";
+import { isCancellationError } from "../lib/errors";
 import type { MenuSectionResponse } from "../data/homepage-fallback";
 import inspirationHeader from '../assets/inspiration-header.png'
 import aboutUsImage from "../assets/aboutus_img.png";
@@ -114,10 +115,13 @@ function InspirationsPage() {
     /\/43_[12]\.jpg(?:\?|$)/i.test(image),
   )
   const displayImages = smallerApiImages.length ? smallerApiImages : apiImages
+  const hasImageError = [menusQuery.error, inspirationSectionsQuery.error].some(
+    (error) => error && !isCancellationError(error),
+  )
 
   return (
       <main className="mx-auto max-w-7xl px-3 py-3 sm:px-5 sm:py-5">
-        {(menusQuery.error || inspirationSectionsQuery.error) && (
+        {hasImageError && (
           <p role="status" className="mb-2 rounded-lg bg-amber-50 px-4 py-2 text-xs text-amber-900">
             Inspiration images could not be loaded from the API.
           </p>

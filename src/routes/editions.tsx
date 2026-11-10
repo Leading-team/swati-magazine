@@ -120,11 +120,11 @@ function EditionsPage() {
           ]}
         /> */}
 
-        {(menusQuery.error || editionsQuery.error) && (
+        {/* {(menusQuery.error || editionsQuery.error) && (
           <p role="alert" className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
             {editionsQuery.error?.message || menusQuery.error?.message}
           </p>
-        )}
+        )} */}
         {menusQuery.isLoading || editionsQuery.isLoading ? (
           <p role="status" className="py-8 text-center text-sm text-stone-600">
             సంచికలు లోడ్ అవుతున్నాయి…

@@ -4,6 +4,7 @@ import { ArrowRight, Mail, Megaphone, Send, Users } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import aboutUsImage from '../assets/aboutus_img.png'
 import { useLanguage } from '../lib/language'
+import { isCancellationError } from '../lib/errors'
  import { getContactEmailDetails, submitContactEnquiry } from '../lib/subscriptionApi'
 const API_BASE_URL = 
   import.meta.env.VITE_API_URL?.trim().replace(/\/+$/, '') ||
@@ -341,11 +342,13 @@ setSuccessMessage('');
     //     ? error.message
     //     : 'Something went wrong. Please try again.'
     //)
-    setErrorMessage(
-    language === 'en'
-      ? 'Sorry, something went wrong. Please try again later.'
-      : 'క్షమించండి, ఏదో సమస్య ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి.'
-  );
+    if (!isCancellationError(error)) {
+      setErrorMessage(
+        language === 'en'
+          ? 'Sorry, something went wrong. Please try again later.'
+          : 'క్షమించండి, ఏదో సమస్య ఏర్పడింది. దయచేసి మళ్లీ ప్రయత్నించండి.',
+      )
+    }
   } finally {
     setIsSubmitting(false)
   }

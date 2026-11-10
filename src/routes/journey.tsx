@@ -295,11 +295,11 @@ function JourneyPage() {
         </section>
         */}
 
-        {(menusQuery.error || journeySectionsQuery.error) && (
+        {/* {(menusQuery.error || journeySectionsQuery.error) && (
           <p role="alert" className="rounded-lg bg-amber-50 px-4 py-3 text-sm text-amber-900">
             {journeySectionsQuery.error?.message || menusQuery.error?.message}
           </p>
-        )}
+        )} */}
         {menusQuery.isLoading || journeySectionsQuery.isLoading ? (
           <p role="status" className="py-8 text-center text-sm text-stone-600">
             ప్రయాణ చిత్రాలు లోడ్ అవుతున్నాయి…
