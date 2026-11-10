@@ -80,25 +80,23 @@ const profiles = [
 
 function InspirationsPage() {
   return (
-      <div className="px-4 py-5 sm:px-6 lg:px-8">
-        <section className="relative isolate flex min-h-56 items-center justify-center overflow-hidden rounded-lg bg-stone-900 text-center sm:min-h-72">
+      <main className="mx-auto max-w-7xl px-3 py-3 sm:px-5 sm:py-5">
+        <section className="relative isolate flex min-h-40 items-center justify-center overflow-hidden bg-stone-900 text-center sm:min-h-52">
           <img
             src={editionBackground}
             alt=""
             className="absolute inset-0 -z-10 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-stone-950/75 via-stone-900/60 to-stone-950/75" />
-          <div className="max-w-2xl px-5 py-10 text-white sm:py-14">
-            <p className="text-xs font-semibold tracking-[0.3em] text-white/80 sm:text-sm">
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-stone-950/70 via-stone-900/60 to-stone-950/70" />
+          <div className="max-w-2xl px-5 py-6 text-white sm:py-8">
+            <p className="text-[10px] font-semibold tracking-[0.3em] text-white/80 sm:text-xs">
               SWATHI · SINCE 1984
             </p>
-            <h1 className="mt-3 font-serif text-3xl font-bold leading-tight sm:text-5xl">
-              స్వాతి వెనుక ఉన్న
-              <br />
-              ఇద్దరు ప్రేరణాత్మక వ్యక్తిత్వాలు
+            <h1 className="mt-2 font-serif text-2xl font-bold leading-tight sm:text-4xl">
+              స్వాతి వెనుక ఉన్న ఇద్దరు ప్రేరణాత్మక వ్యక్తిత్వాలు
             </h1>
-            <div className="mx-auto my-4 h-px w-24 bg-amber-100/80" />
-            <p className="mx-auto max-w-xl text-sm leading-6 text-white/90 sm:text-base">
+            <div className="mx-auto my-3 h-px w-20 bg-amber-100/80" />
+            <p className="mx-auto max-w-xl text-xs leading-5 text-white/90 sm:text-sm sm:leading-6">
               ఒక దృఢమైన ఆలోచన... ఒక దశాబ్దాల ప్రయాణం...
               <br className="hidden sm:block" />
               తెలుగు కుటుంబాల ప్రేమతో, రచయితల స్ఫూర్తితో నేటికీ కొనసాగుతున్న స్వాతి కథ.
@@ -106,47 +104,47 @@ function InspirationsPage() {
           </div>
         </section>
 
-        <section className="mt-5 grid gap-5 lg:grid-cols-2">
+        <section className="mt-2 grid gap-2 bg-[#eadcc8] lg:grid-cols-2">
           {profiles.map((profile) => (
             <article
               key={profile.englishName}
-              className="overflow-hidden rounded-lg border border-rule bg-[#fffaf2] shadow-sm"
+              className="flex min-w-0 flex-col bg-[#fffaf2]"
             >
-              <div className="grid sm:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
-                <div className="min-h-64 overflow-hidden bg-secondary sm:min-h-0">
+              <div className="grid grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+                <div className="min-h-40 overflow-hidden bg-secondary sm:min-h-48">
                   <img
                     src={profile.image}
                     alt={profile.englishName}
                     onError={(event) => {
                       event.currentTarget.src = currentCover;
                     }}
-                    className="h-full min-h-64 w-full object-cover"
+                    className="h-full min-h-40 w-full object-cover sm:min-h-48"
                   />
                 </div>
-                <div className="p-5 sm:p-6">
-                  <p className="text-sm font-semibold text-primary">{profile.role}</p>
-                  <p className="text-xs text-muted-foreground">({profile.roleEnglish})</p>
-                  <h2 className="mt-3 font-serif text-2xl font-bold leading-snug text-foreground">
+                <div className="self-center p-3 sm:p-5">
+                  <p className="text-xs font-semibold text-primary sm:text-sm">{profile.role}</p>
+                  <p className="text-[10px] text-muted-foreground sm:text-xs">({profile.roleEnglish})</p>
+                  <h2 className="mt-2 font-serif text-lg font-bold leading-snug text-foreground sm:text-2xl">
                     {profile.name}
                   </h2>
-                  <p className="mt-1 font-serif text-base text-muted-foreground">
+                  <p className="mt-1 font-serif text-xs text-muted-foreground sm:text-sm">
                     {profile.englishName}
                   </p>
-                  <p className="mt-4 text-sm leading-6 text-foreground/80">{profile.intro}</p>
+                  <p className="mt-2 text-[10px] leading-4 text-foreground/80 sm:mt-3 sm:text-xs sm:leading-5">{profile.intro}</p>
                 </div>
               </div>
 
-              <div className="border-t border-rule bg-white/60 px-5 py-4 sm:px-6">
-                <h3 className="flex items-center gap-2 font-serif text-lg font-bold text-primary">
-                  <Award aria-hidden="true" className="h-5 w-5" />
+              <div className="px-4 py-3 sm:px-5">
+                <h3 className="flex items-center gap-2 font-serif text-sm font-bold text-primary sm:text-base">
+                  <Award aria-hidden="true" className="h-4 w-4 sm:h-5 sm:w-5" />
                   ప్రధాన కార్యసాధనలు
                 </h3>
-                <ul className="mt-3 space-y-2">
+                <ul className="mt-2 space-y-1">
                   {profile.contributions.map(({ icon: Icon, text }) => (
-                    <li key={text} className="flex items-start gap-3 text-sm leading-5">
+                    <li key={text} className="flex items-start gap-2 border-b border-[#eadcc8]/70 py-1 text-[10px] leading-4 last:border-0 sm:text-xs sm:leading-5">
                       <Icon
                         aria-hidden="true"
-                        className="mt-0.5 h-4 w-4 shrink-0 text-primary"
+                        className="mt-0.5 h-3.5 w-3.5 shrink-0 text-primary sm:h-4 sm:w-4"
                       />
                       <span>{text}</span>
                     </li>
@@ -154,20 +152,20 @@ function InspirationsPage() {
                 </ul>
               </div>
 
-              <div className="px-5 py-4 sm:px-6">
-                <h3 className="flex items-center gap-2 font-serif text-lg font-bold text-primary">
-                  <BookOpen aria-hidden="true" className="h-5 w-5" />
+              <div className="px-4 pb-3 sm:px-5">
+                <h3 className="flex items-center gap-2 font-serif text-sm font-bold text-primary sm:text-base">
+                  <BookOpen aria-hidden="true" className="h-4 w-4 sm:h-5 sm:w-5" />
                   రచనలు / పుస్తకాలు
                 </h3>
-                <div className="mt-3 grid grid-cols-4 gap-2 sm:gap-3">
+                <div className="mt-2 grid grid-cols-4 gap-2 sm:gap-3">
                   {profile.books.map((book) => (
                     <div key={book.title}>
                       <img
                         src={book.image}
                         alt={book.title}
-                        className="aspect-[3/4] w-full rounded-sm border border-rule object-cover shadow-sm"
+                        className="aspect-[3/4] w-full border border-rule object-cover"
                       />
-                      <p className="mt-1 text-center text-[10px] leading-4 text-muted-foreground sm:text-xs">
+                      <p className="mt-1 text-center text-[9px] leading-3 text-muted-foreground sm:text-[10px] sm:leading-4">
                         {book.title}
                       </p>
                     </div>
@@ -175,11 +173,11 @@ function InspirationsPage() {
                 </div>
               </div>
 
-              <blockquote className="border-t border-rule bg-primary/[0.04] px-5 py-4 sm:px-6">
-                <p className="font-serif text-sm italic leading-6 text-foreground/80">
+              <blockquote className="mt-auto bg-[#f7ead6] px-4 py-3 sm:px-5">
+                <p className="font-serif text-xs italic leading-5 text-foreground/80 sm:text-sm">
                   “{profile.quote}”
                 </p>
-                <footer className="mt-2 text-right text-xs font-semibold text-primary">
+                <footer className="mt-1 text-right text-[10px] font-semibold text-primary sm:text-xs">
                   — {profile.name}
                 </footer>
               </blockquote>
@@ -187,29 +185,26 @@ function InspirationsPage() {
           ))}
         </section>
 
-        <section className="relative isolate mt-5 grid min-h-48 items-center overflow-hidden rounded-lg bg-stone-900 sm:min-h-56 md:grid-cols-2">
+        <section className="relative isolate mt-2 grid min-h-36 items-center overflow-hidden bg-stone-900 sm:min-h-44 md:grid-cols-2">
           <img
-            src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?auto=format&fit=crop&w=1800&q=85"
+            src={editionBackground}
             alt=""
-            onError={(event) => {
-              event.currentTarget.src = editionBackground;
-            }}
             className="absolute inset-0 -z-10 h-full w-full object-cover"
           />
-          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-stone-950/80 via-stone-950/60 to-stone-950/35" />
-          <div className="px-6 py-8 text-white sm:px-10">
-            <p className="text-xs font-semibold uppercase tracking-[0.25em] text-white/75">
-              A legacy of stories
+          <div className="absolute inset-0 -z-10 bg-gradient-to-r from-stone-950/80 via-stone-950/65 to-stone-950/45" />
+          <div className="px-5 py-5 text-white sm:px-8">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.25em] text-white/75 sm:text-xs">
+              SWATHI · A LEGACY OF STORIES
             </p>
-            <h2 className="mt-2 font-serif text-2xl font-bold sm:text-3xl">
+            <h2 className="mt-2 font-serif text-xl font-bold sm:text-2xl">
               కథలతో మొదలై... తరతరాలకు స్ఫూర్తిగా
             </h2>
           </div>
-          <p className="max-w-xl px-6 pb-8 text-sm leading-6 text-white/90 sm:px-10 md:py-8">
+          <p className="max-w-xl px-5 pb-5 text-xs leading-5 text-white/90 sm:px-8 sm:text-sm sm:leading-6 md:py-5">
             దశాబ్దాలుగా తెలుగు పాఠకులతో కలిసి ప్రయాణిస్తున్న స్వాతి—సాహిత్యానికి, ఆలోచనలకు,
             కుటుంబ అనుబంధాలకు చిరునామా. ఈ స్ఫూర్తి ప్రయాణం ఇలాగే కొనసాగుతుంది.
           </p>
         </section>
-      </div>
+      </main>
   );
 }

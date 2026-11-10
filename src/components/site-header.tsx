@@ -1,9 +1,9 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { Link, useRouterState } from '@tanstack/react-router'
 import { Menu } from 'lucide-react'
 import { useState } from 'react'
 import { useLanguage } from '../lib/language'
-import { getAllMenus } from '../lib/menus'
+import { getAllMenus, getMenuSectionsById } from '../lib/menus'
 import brandImage from '../assets/header-brand.jpg'
 import wordmarkImage from '../assets/header-wordmark.jpg'
 
@@ -25,6 +25,8 @@ const defaultMenus = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false)
+  const [menuDetailsError, setMenuDetailsError] = useState('')
+  const queryClient = useQueryClient()
   const { language, setLanguage } = useLanguage()
   const {
     data: fetchedMenus,
@@ -76,7 +78,22 @@ export function SiteHeader() {
         {item.label}
       </span>
     )
-    const onClick = () => mobile && setOpen(false)
+    const onClick = () => {
+      if (mobile) setOpen(false)
+      setMenuDetailsError('')
+      void queryClient.fetchQuery({
+        queryKey: ['menuSections', item.id, language],
+        queryFn: ({ signal }) =>
+          getMenuSectionsById(item.id, { language, signal }),
+        staleTime: 5 * 60 * 1000,
+      }).catch((requestError: unknown) => {
+        setMenuDetailsError(
+          requestError instanceof Error
+            ? requestError.message
+            : 'Unable to load menu details.',
+        )
+      })
+    }
 
     return external ? (
       <a
@@ -168,6 +185,12 @@ export function SiteHeader() {
             {menus.map((item) => renderMenuLink(item, true))}
           </nav>
         </div>
+      )}
+
+      {menuDetailsError && (
+        <p role="alert" className="bg-amber-50 px-5 py-2 text-center text-xs text-amber-900">
+          {menuDetailsError}
+        </p>
       )}
 
       {/* {isError && (

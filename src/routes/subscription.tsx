@@ -90,6 +90,7 @@ const pageCopy = {
     description: 'వారపత్రిక, మాసపత్రిక డిజిటల్ సంచికలు మరియు ప్రత్యేక కథనాలను చదవడానికి మీకు సరైన ప్లాన్‌ను ఎంచుకోండి.',
     language: 'భాష',
     country: 'దేశం',
+    languagesUnavailable: 'సభ్యత్వాల కోసం ప్రస్తుతం క్రియాశీల భాషలు అందుబాటులో లేవు.',
     loading: 'సభ్యత్వ ప్లాన్‌లు లోడ్ అవుతున్నాయి…',
     plansHeading: 'మీ పఠనానికి సరైన ప్లాన్',
     choosePrompt: 'మీకు నచ్చినది ఎంచుకోండి',
@@ -156,6 +157,7 @@ const pageCopy = {
     description: 'Choose the plan that suits you to read weekly and monthly editions and exclusive stories.',
     language: 'Language',
     country: 'Country',
+    languagesUnavailable: 'No active languages are currently available for subscriptions.',
     loading: 'Loading subscription plans…',
     plansHeading: 'The right plan for your reading',
     choosePrompt: 'Choose the plan you love',
@@ -278,7 +280,7 @@ function handleOfferImageError(event: SyntheticEvent<HTMLImageElement>) {
 }
 
 function SubscriptionPage() {
-  const { language, setLanguage } = useLanguage()
+  const { language } = useLanguage()
   const [countryId, setCountryId] = useState('')
   const [selectedTerms, setSelectedTerms] = useState<Record<number, string>>({})
   const [selectedLanguageCode, setSelectedLanguageCode] = useState('en')
@@ -288,12 +290,6 @@ function SubscriptionPage() {
   const [successOrder, setSuccessOrder] = useState('')
   const copy = pageCopy[language]
 
-  const offersQuery = useQuery<SubscriptionOffer[]>({
-    queryKey: ['subscriptionOffers', language],
-    queryFn: ({ signal }) => getSubscriptionOffers(language, { signal }),
-    retry: false,
-    staleTime: 5 * 60 * 1000,
-  })
   const countriesQuery = useQuery<SubscriptionCountry[]>({
     queryKey: ['subscriptionCountries'],
     queryFn: ({ signal }) => getSubscriptionCountries({ signal }),
@@ -308,20 +304,44 @@ function SubscriptionPage() {
   })
 
   const countries = (countriesQuery.data || []).filter((country) => country.active)
+  const offerLanguages = (languagesQuery.data || []).filter((item) => item.active)
   const country =
     countries.find((item) => String(item.country_id) === countryId) ||
     countries.find((item) => item.countrycode?.trim().toUpperCase() === 'IND') ||
     countries[0]
+  const selectedLanguage =
+    offerLanguages.find((item) => item.code === selectedLanguageCode) ||
+    offerLanguages.find((item) => item.code === 'en') ||
+    offerLanguages[0]
+  const headerLanguage = offerLanguages.find(
+    (item) => item.code.trim().toLowerCase() === language,
+  )
+  const offersQuery = useQuery<SubscriptionOffer[]>({
+    queryKey: ['subscriptionOffers', country?.country_id, headerLanguage?.language_id],
+    queryFn: ({ signal }) => {
+      if (country?.country_id == null || headerLanguage?.language_id == null) {
+        throw new Error('A country and language must be selected to load subscription plans.')
+      }
+      return getSubscriptionOffers({
+        countryId: country.country_id,
+        languageId: headerLanguage.language_id,
+        signal,
+      })
+    },
+    enabled: country?.country_id != null && headerLanguage?.language_id != null,
+    retry: false,
+    staleTime: 5 * 60 * 1000,
+  })
   const offers = offersQuery.data || []
-  const loading = offersQuery.isLoading || countriesQuery.isLoading
-  const pageError = offersQuery.error || countriesQuery.error
+  const loading = offersQuery.isLoading || countriesQuery.isLoading || languagesQuery.isLoading
+  const pageError = offersQuery.error || countriesQuery.error || languagesQuery.error
 
   function chooseOffer(offer: SubscriptionOffer, plan: SubscriptionPlan, offerIndex: number) {
     setCheckoutError('')
     setSelectedOffer({
       offer,
       plan,
-      languageCode: offerIndex === 2 ? selectedLanguageCode : undefined,
+      languageCode: offerIndex === 2 ? selectedLanguage?.code : undefined,
     })
   }
 
@@ -474,7 +494,7 @@ function SubscriptionPage() {
                   <select
                     value={country?.country_id ?? ''}
                     onChange={(event) => setCountryId(event.target.value)}
-                    className="h-9 w-28 rounded-lg border border-stone-300 bg-stone-50 px-2 text-xs text-stone-900 outline-none transition focus:border-brand-crimson focus:ring-2 focus:ring-brand-crimson/15 disabled:cursor-not-allowed disabled:opacity-60 sm:w-40 sm:px-3 sm:text-sm"
+                    className="h-9 w-28 rounded-lg border border-stone-300 bg-stone-50 px-2 text-[11px] text-stone-900 outline-none transition focus:border-brand-crimson focus:ring-2 focus:ring-brand-crimson/15 disabled:cursor-not-allowed disabled:opacity-60 sm:w-40 sm:px-3 sm:text-xs"
                     disabled={countries.length === 0}
                   >
                     {countries.map((item) => (
@@ -502,6 +522,10 @@ function SubscriptionPage() {
       ) : !country ? (
         <p role="alert" className="rounded-xl bg-amber-50 p-4 text-sm text-amber-900">
           {copy.countriesUnavailable}
+        </p>
+      ) : !selectedLanguage ? (
+        <p role="alert" className="rounded-xl bg-amber-50 p-4 text-sm text-amber-900">
+          {copy.languagesUnavailable}
         </p>
       ) : offers.length === 0 ? (
         <p className="rounded-xl border border-stone-200 bg-white p-6 text-center text-stone-600">
@@ -688,8 +712,6 @@ function SubscriptionPage() {
               const selectedPlan =
                 plans.find((item) => item.PlanName === selectedTerms[offerIndex]) || plans[0]
               const popular = offerIndex === 1
-              const offerLanguages = languagesQuery.data?.filter((item) => item.active) || []
-
               return (
                 <article
                   key={`${offer.Title}-${offerIndex}`}
@@ -763,7 +785,7 @@ function SubscriptionPage() {
                           <label className="grid gap-1 font-telugu text-[10px] font-semibold text-stone-700">
                             {copy.language}
                             <select
-                              value={selectedLanguageCode}
+                              value={selectedLanguage?.code || ''}
                               className="h-9 w-full min-w-0 rounded-md border border-stone-300 bg-white px-2 text-xs text-stone-900 outline-none transition focus:border-brand-crimson focus:ring-2 focus:ring-brand-crimson/15"
                               onChange={(event) => setSelectedLanguageCode(event.target.value)}
                             >

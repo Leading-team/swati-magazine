@@ -31,8 +31,11 @@ function asArray(payload, label) {
   throw new Error(`The subscription service returned invalid ${label}.`)
 }
 
-export async function getSubscriptionOffers(language = 'te', { signal } = {}) {
-  const params = new URLSearchParams({ language })
+export async function getSubscriptionOffers({ countryId, languageId, signal } = {}) {
+  const params = new URLSearchParams({
+    CountryId: String(countryId),
+    LanguageId: String(languageId),
+  })
   return asArray(
     await request(`/subscriptionplan/GetAllSubscriptionPlans?${params}`, { signal }),
     'plans',

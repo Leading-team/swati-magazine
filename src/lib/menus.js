@@ -72,7 +72,7 @@ function extractMenuSections(payload) {
 }
 
 /**
- * @param {number} menuId
+ * @param {number | string} menuId
  * @param {{ language?: string, signal?: AbortSignal }} options
  */
 export async function getMenuSectionsById(menuId = 1, { language = 'te', signal } = {}) {
