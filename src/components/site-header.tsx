@@ -7,6 +7,7 @@ import { getAllMenus, getMenuSectionsById } from '../lib/menus'
 import brandImage from '../assets/header-brand.jpg'
 import wordmarkImage from '../assets/header-wordmark.jpg'
 
+
 type MenuItem = {
   id: number | string
   label: string
