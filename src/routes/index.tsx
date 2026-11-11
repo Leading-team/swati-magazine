@@ -89,30 +89,11 @@ function IndexComponent() {
   const hasSectionData =
     !hasSectionError &&
     (sectionDetails?.some((menu) => Array.isArray(menu.sections) && menu.sections.length > 0) ?? false)
-  const isLoadingHomepageData = isLoadingSections || isLoadingContactDetails
   const isUsingStaticContent =
     hasSectionError ||
-    !hasSectionData ||
+    (!isLoadingSections && !hasSectionData) ||
     hasContactDetailsError ||
-    fetchedActiveContactDetails.length === 0
-
-  if (isLoadingHomepageData) {
-    return (
-      <div className="homePage flex min-h-[60vh] flex-col items-center justify-center gap-5 px-4" role="status" aria-live="polite">
-        <div className="relative flex h-24 w-24 items-center justify-center">
-          <span aria-hidden="true" className="absolute inset-0 rounded-full border-4 border-rose-100" />
-          <span aria-hidden="true" className="absolute inset-0 animate-spin rounded-full border-4 border-transparent border-r-brand-crimson border-t-brand-crimson motion-reduce:animate-none" />
-          <span aria-hidden="true" className="absolute inset-3 animate-pulse rounded-full bg-rose-50 motion-reduce:animate-none" />
-          <span className="relative font-telugu text-lg font-bold text-brand-crimson">
-            {isEnglish ? 'Swati' : 'స్వాతి'}
-          </span>
-        </div>
-        <p className="font-telugu text-sm font-medium text-stone-600">
-          {isEnglish ? 'Loading the latest content…' : 'తాజా సమాచారం లోడ్ అవుతోంది…'}
-        </p>
-      </div>
-    )
-  }
+    (!isLoadingContactDetails && fetchedActiveContactDetails.length === 0)
 
   const sections = (hasSectionData ? sectionDetails ?? [] : fallbackSectionDetails).flatMap(
     (menu) => (Array.isArray(menu.sections) ? menu.sections : []),
@@ -204,6 +185,9 @@ function IndexComponent() {
             alt={isEnglish ? 'Cover of the latest Swati issue' : 'స్వాతి తాజా సంచిక ముఖచిత్రం'}
             className="relative h-[240px] max-w-full rounded-[12px] object-contain shadow-[0_22px_45px_-17px_rgba(74,22,22,0.55)] sm:h-[320px] lg:h-[360px]"
             onError={handleImageError}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
         </div>
 
@@ -224,6 +208,8 @@ function IndexComponent() {
                     alt=""
                     className="h-20 w-20 shrink-0  object-cover"
                     onError={handleImageError}
+                    loading={index === 0 ? 'eager' : 'lazy'}
+                    decoding="async"
                   />
                 ) : (
                   <div
@@ -331,6 +317,7 @@ function IndexComponent() {
                 src={story.image}
                 alt=""
                 loading="lazy"
+                decoding="async"
                 onError={handleImageError}
                 className={
                   index === 0
@@ -379,6 +366,7 @@ function IndexComponent() {
                   src={story.image}
                   alt=""
                   loading="lazy"
+                  decoding="async"
                   className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
                   onError={handleImageError}
                 />
@@ -422,6 +410,8 @@ function IndexComponent() {
             src={journeySection?.tiles?.[0]?.image}
             alt="Books representing Swati's 43-year journey"
             onError={handleImageError}
+            loading="lazy"
+            decoding="async"
           />
         </div>
       </section>
