@@ -307,14 +307,19 @@ function JourneyPage() {
         ) : images.length > 0 ? (
           <section aria-label="ప్రయాణ చిత్రాలు" className="grid grid-cols-3 items-start gap-3 py-5 sm:gap-5">
             {images.map((image, index) => (
-              <img
+              <div
                 key={`${image.src}-${index}`}
-                src={image.src}
-                alt={image.alt}
-                className="h-auto w-full"
-                loading={index < 3 ? "eager" : "lazy"}
-                decoding="async"
-              />
+                className="aspect-[3/4] w-full overflow-hidden bg-stone-100"
+              >
+                <img
+                  src={image.src}
+                  alt={image.alt}
+                  className="h-full w-full object-contain"
+                  loading={index === 0 ? "eager" : "lazy"}
+                  fetchPriority={index === 0 ? "high" : "auto"}
+                  decoding="async"
+                />
+              </div>
             ))}
           </section>
         ) : (

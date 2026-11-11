@@ -132,6 +132,9 @@ function InspirationsPage() {
                             src={inspirationHeader}
                             alt="Swati Publications"
                             className="absolute inset-0 -z-10 h-full w-full object-cover"
+                            loading="eager"
+                            fetchPriority="high"
+                            decoding="async"
                           />
           <div className="absolute inset-0 -z-10 from-stone-950/70 via-stone-900/60 to-stone-950/70" />
           <div className="max-w-2xl px-5 py-6 text-white sm:py-8">
@@ -154,18 +157,37 @@ function InspirationsPage() {
               className="flex min-w-0 flex-col bg-[#fffaf2]"
             >
               <div
-                className="grid min-h-44 grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-stretch bg-[#fffaf2] sm:min-h-48"
+                className="relative isolate grid min-h-44 grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] items-stretch overflow-hidden bg-[#fffaf2] sm:min-h-48"
                 style={{
                   backgroundImage: apiImages[index]
-                    ? `linear-gradient(90deg, rgba(255,250,242,0) 0%, rgba(255,250,242,0.08) 34%, #fffaf2 52%, #fffaf2 100%), url("${apiImages[index]}")`
+                    ? "none"
                     : "linear-gradient(90deg, #f3e5d1 0%, #fffaf2 52%)",
-                  backgroundSize: apiImages[index] ? "100% 100%, 50% 100%" : "100% 100%",
-                  backgroundPosition: "left center, left center",
                   backgroundRepeat: "no-repeat",
                 }}
               >
-                <div aria-hidden="true" />
-                <div className="self-center p-3 sm:p-5">
+                {apiImages[index] && (
+                  <img
+                    src={apiImages[index]}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-y-0 left-0 z-0 h-full w-1/2 object-cover"
+                    loading={index === 0 ? "eager" : "lazy"}
+                    fetchPriority={index === 0 ? "high" : "auto"}
+                    decoding="async"
+                  />
+                )}
+                {apiImages[index] && (
+                  <div
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 z-0"
+                    style={{
+                      backgroundImage:
+                        "linear-gradient(90deg, rgba(255,250,242,0) 0%, rgba(255,250,242,0.08) 34%, #fffaf2 52%, #fffaf2 100%)",
+                    }}
+                  />
+                )}
+                <div aria-hidden="true" className="relative z-10" />
+                <div className="relative z-10 self-center p-3 sm:p-5">
                   <p className="text-xs font-semibold text-primary text-red-700 sm:text-sm">{profile.role}</p>
                   <p className="text-[10px] text-muted-foreground sm:text-xs">({profile.roleEnglish})</p>
                   <h2 className="mt-2 font-serif text-lg font-bold leading-snug text-foreground sm:text-2xl">
@@ -204,15 +226,17 @@ function InspirationsPage() {
                 <div className="mt-2 grid grid-cols-4 gap-2 sm:gap-3">
                   {profile.books.map((book, bookIndex) => (
                     <div key={book.title}>
-                      {displayImages[bookIndex % displayImages.length] && (
-                        <img
-                          src={displayImages[bookIndex % displayImages.length]}
-                          alt={book.title}
-                          className="aspect-[3/4] w-full border border-rule object-cover"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      )}
+                      <div className="aspect-[3/4] w-full overflow-hidden border border-rule bg-[#f3e5d1]">
+                        {displayImages.length > 0 && (
+                          <img
+                            src={displayImages[bookIndex % displayImages.length]}
+                            alt={book.title}
+                            className="h-full w-full object-cover"
+                            loading="lazy"
+                            decoding="async"
+                          />
+                        )}
+                      </div>
                       <p className="mt-1 text-center text-[9px] leading-3 text-muted-foreground sm:text-[10px] sm:leading-4">
                         {book.title}
                       </p>

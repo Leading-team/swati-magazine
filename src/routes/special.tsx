@@ -57,7 +57,13 @@ const stories = [
 */
 
 const featuredImage =
-  "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1800&q=90";
+  "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1280&q=85";
+const featuredImageSrcSet = [640, 960, 1280, 1600]
+  .map(
+    (width) =>
+      `https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=${width}&q=85 ${width}w`,
+  )
+  .join(", ");
 
 function SpecialPage() {
   const { language } = useLanguage()
@@ -97,11 +103,17 @@ function SpecialPage() {
         <section className="relative isolate flex min-h-48 items-center overflow-hidden rounded-lg bg-stone-100 sm:min-h-64">
           <img
             src={featuredImage}
+            srcSet={featuredImageSrcSet}
+            sizes="(min-width: 1280px) 1248px, calc(100vw - 2rem)"
             alt=""
             onError={(event) => {
+              event.currentTarget.removeAttribute("srcset");
               event.currentTarget.src = coverE2;
             }}
             className="absolute inset-0 -z-10 h-full w-full object-cover"
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
           />
           <div className="absolute inset-0 -z-10 bg-gradient-to-r from-white/95 via-white/75 to-white/5" />
           <div className="max-w-xl px-6 py-8 sm:px-10 sm:py-12">
@@ -189,7 +201,8 @@ function SpecialPage() {
                   src={image.src}
                   alt={image.alt}
                   className="h-full w-full object-contain"
-                  loading={index < 3 ? "eager" : "lazy"}
+                  loading="lazy"
+                  fetchPriority="low"
                   decoding="async"
                 />
               </div>
