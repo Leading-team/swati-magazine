@@ -10,7 +10,8 @@ import {
   PencilLine,
   Truck,
 } from 'lucide-react'
-import currentCover from '../assets/current-cover.jpg'
+import cover1 from '../assets/cover1.jpg'
+import cover2 from '../assets/cover2.jpg'
 import noImage from '../assets/noimage.png'
 import {
   fallbackContactDetails,
@@ -178,22 +179,29 @@ function IndexComponent() {
         </p>
       )}
       <section className="hero grid">
-        <div className="relative flex min-h-[260px] items-center justify-center overflow-hidden sm:min-h-[340px]">
-          <div className="absolute inset-x-0 top-0 h-20 " />
+        <div className="relative grid min-h-[240px] grid-cols-2 items-center justify-items-center gap-3 overflow-hidden sm:min-h-[300px] sm:gap-4">
           <img
-            src={editionSection?.coverImage?.trim() || currentCover}
+            src={editionSection?.coverImage?.trim() || cover1}
             alt={isEnglish ? 'Cover of the latest Swati issue' : 'స్వాతి తాజా సంచిక ముఖచిత్రం'}
-            className="relative h-[240px] max-w-full rounded-[12px] object-contain shadow-[0_22px_45px_-17px_rgba(74,22,22,0.55)] sm:h-[320px] lg:h-[360px]"
+            className="relative h-[220px] w-full max-w-[190px] rounded-[12px] object-contain shadow-[0_22px_45px_-17px_rgba(74,22,22,0.55)] sm:h-[280px] lg:h-[320px]"
             onError={handleImageError}
             loading="eager"
             fetchPriority="high"
+            decoding="async"
+          />
+          <img
+            src={cover2}
+            alt={isEnglish ? 'Cover of another Swati issue' : 'స్వాతి మరో సంచిక ముఖచిత్రం'}
+            className="relative h-[220px] w-full max-w-[190px] rounded-[12px] object-contain shadow-[0_22px_45px_-17px_rgba(74,22,22,0.55)] sm:h-[280px] lg:h-[320px]"
+            onError={handleImageError}
+            loading="eager"
             decoding="async"
           />
         </div>
 
         <div
           id="current-issue"
-          className="flex flex-col justify-center rounded-[30px] sm:p-5"
+          className="flex w-full min-w-0 max-w-[34rem] flex-col justify-center rounded-[30px] p-1 sm:p-3"
         >
           <SectionHeading>
             {getSectionHeading(editionSection, 'ఈ సంచిక', 'Current Issue')}
@@ -201,12 +209,12 @@ function IndexComponent() {
  
           <div className="">
             {issueItems.map((item, index) => (
-              <article key={item.title} className="flex items-center gap-3 border border-stone-100  px-2">
+              <article key={item.title} className="flex items-center gap-2 border border-stone-100 px-1 py-1">
                 {item.image ? (
                   <img
                     src={item.image}
                     alt=""
-                    className="h-20 w-20 shrink-0  object-cover"
+                    className="h-20 w-20 shrink-0 object-cover"
                     onError={handleImageError}
                     loading={index === 0 ? 'eager' : 'lazy'}
                     decoding="async"
