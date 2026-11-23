@@ -350,7 +350,7 @@ function IndexComponent() {
               href="#current-issue"
               className="group overflow-hidden transition hover:-translate-y-1 hover:shadow-lg"
             >
-              <div className="h-32 overflow-hidden bg-rose-50 sm:h-40 lg:h-44">
+              <div className="aspect-[4/3] w-full overflow-hidden bg-rose-50">
                 <img
                   src={story.image}
                   alt=""
