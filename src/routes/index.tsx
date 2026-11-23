@@ -179,11 +179,11 @@ function IndexComponent() {
         </p>
       )}
       <section className="hero grid">
-        <div className="relative grid min-h-[240px] grid-cols-2 items-center justify-items-center gap-3 overflow-hidden sm:min-h-[300px] sm:gap-4">
+        <div className="relative grid min-h-[280px] grid-cols-2 items-center justify-items-center gap-3 overflow-hidden sm:min-h-[360px] sm:gap-4">
           <img
             src={editionSection?.coverImage?.trim() || cover1}
             alt={isEnglish ? 'Cover of the latest Swati issue' : 'స్వాతి తాజా సంచిక ముఖచిత్రం'}
-            className="relative h-[220px] w-full max-w-[190px] rounded-[12px] object-contain shadow-[0_22px_45px_-17px_rgba(74,22,22,0.55)] sm:h-[280px] lg:h-[320px]"
+            className="relative h-[260px] w-full max-w-[190px] -rotate-2 rounded-[12px] object-contain [clip-path:inset(6px_0)] shadow-[0_14px_20px_-6px_rgba(74,22,22,0.55),0_4px_8px_rgba(0,0,0,0.2)] sm:h-[340px] lg:h-[380px]"
             onError={handleImageError}
             loading="eager"
             fetchPriority="high"
@@ -192,7 +192,7 @@ function IndexComponent() {
           <img
             src={cover2}
             alt={isEnglish ? 'Cover of another Swati issue' : 'స్వాతి మరో సంచిక ముఖచిత్రం'}
-            className="relative h-[220px] w-full max-w-[190px] rounded-[12px] object-contain shadow-[0_22px_45px_-17px_rgba(74,22,22,0.55)] sm:h-[280px] lg:h-[320px]"
+            className="relative h-[260px] w-full max-w-[190px] rotate-2 rounded-[12px] object-contain [clip-path:inset(6px_0)] shadow-[0_14px_20px_-6px_rgba(74,22,22,0.55),0_4px_8px_rgba(0,0,0,0.2)] sm:h-[340px] lg:h-[380px]"
             onError={handleImageError}
             loading="eager"
             decoding="async"
@@ -214,7 +214,7 @@ function IndexComponent() {
                   <img
                     src={item.image}
                     alt=""
-                    className="h-20 w-20 shrink-0 object-cover"
+                    className="h-20 w-20 shrink-0 rounded-lg object-cover shadow-sm"
                     onError={handleImageError}
                     loading={index === 0 ? 'eager' : 'lazy'}
                     decoding="async"
@@ -236,12 +236,12 @@ function IndexComponent() {
             ))}
           </div>
 
-          <a
+          {/* <a
             href="#stories"
             className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
           >
             {isEnglish ? 'Read this issue' : 'ఈ సంచికను చదవండి'} <ArrowRight className="h-4 w-4" />
-          </a>
+          </a> */}
         </div>
 
         <aside
@@ -315,11 +315,7 @@ function IndexComponent() {
           {specialItems.map((story, index) => (
             <article
               key={`${story.title}-${index}`}
-              className={
-                index === 0
-                  ? 'group relative isolate col-span-2 flex h-52 flex-col justify-end overflow-hidden bg-stone-800 p-4 text-white shadow-sm sm:h-60 xl:h-36'
-                  : 'group flex min-w-0 flex-col overflow-hidden'
-              }
+              className="group flex min-w-0 flex-col overflow-hidden"
             >
               <img
                 src={story.image}
@@ -327,27 +323,12 @@ function IndexComponent() {
                 loading="lazy"
                 decoding="async"
                 onError={handleImageError}
-                className={
-                  index === 0
-                    ? 'absolute inset-0 -z-20 h-full w-full object-cover transition duration-700 group-hover:scale-105'
-                    : 'h-28 w-full object-cover transition duration-500 group-hover:scale-105 sm:h-36 xl:h-24'
-                }
+                className="mx-auto h-[180px] w-[180px] max-w-full rounded-lg object-contain transition duration-500 group-hover:scale-105"
               />
-              {index === 0 ? (
-                <>
-                  <div className={`absolute inset-0 -z-10 bg-gradient-to-t ${story.tone} via-black/15 to-transparent`} />
-                  <span className="mb-2 w-fit rounded-full bg-white/15 px-3 py-1 font-telugu text-[10px] font-semibold backdrop-blur">
-                    {story.category}
-                  </span>
-                  <h3 className="font-telugu text-xl font-bold">{story.title}</h3>
-                  <p className="mt-1 font-telugu text-xs text-white/80">{story.description}</p>
-                </>
-              ) : (
-                <div className="pt-2">
-                  <h3 className="font-telugu font-bold text-stone-800">{story.title}</h3>
-                  <p className="mt-1 font-telugu text-[12px] leading-5 text-stone-600">{story.description}</p>
-                </div>
-              )}
+              <div className="mx-auto w-[180px] max-w-full pt-2">
+                <h3 className="font-telugu font-bold text-stone-800">{story.title}</h3>
+                <p className="mt-1 font-telugu text-[12px] leading-5 text-stone-600">{story.description}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -369,13 +350,13 @@ function IndexComponent() {
               href="#current-issue"
               className="group overflow-hidden transition hover:-translate-y-1 hover:shadow-lg"
             >
-              <div className="h-24 overflow-hidden bg-rose-50 sm:h-28">
+              <div className="h-32 overflow-hidden bg-rose-50 sm:h-40 lg:h-44">
                 <img
                   src={story.image}
                   alt=""
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-cover transition duration-500 group-hover:scale-105"
+                  className="h-full w-full rounded-lg object-cover shadow-sm transition duration-500 group-hover:scale-105"
                   onError={handleImageError}
                 />
               </div>
@@ -405,12 +386,12 @@ function IndexComponent() {
               ? "Swati's journey continues with the love of Telugu families, stories and memories…"
               : 'తెలుగు కుటుంబాల ప్రేమాభిమానాలతో, కథలతో, జ్ఞాపకాలతో సాగుతున్న స్వాతి ప్రయాణం...')}
           </p>
-          <a
+          {/* <a
             
             className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
           >
             {isEnglish ? 'Explore our journey' : 'మా ప్రయాణం గురించి'} <ArrowRight className="h-4 w-4" />
-          </a>
+          </a> */}
         </div>
         <div className="journey-row">
           <img
@@ -435,12 +416,12 @@ function IndexComponent() {
                 ? "The story of Swati's 43-year journey alongside Telugu families…"
                 : '43 సంవత్సరాలుగా తెలుగు కుటుంబాలతో కలిసి ప్రయాణిస్తున్న స్వాతి కథ...')}
             </p>
-            <a
+            {/* <a
               
               className="mt-4 inline-flex w-fit items-center gap-2 rounded-md bg-brand-crimson px-5 py-2 font-telugu text-sm font-bold text-white shadow-[0_12px_25px_-15px_rgba(127,29,29,0.7)] transition hover:-translate-y-0.5 hover:bg-brand-darkRed"
             >
               {isEnglish ? 'Learn about us' : 'మా గురించి తెలుసుకోండి'} <ArrowRight className="h-4 w-4" />
-            </a>
+            </a> */}
           </div>
         </section>
 

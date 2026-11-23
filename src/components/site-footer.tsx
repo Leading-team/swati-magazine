@@ -46,6 +46,14 @@ export function SiteFooter() {
       </div>
 
       <div className="px-5 pb-2 text-center text-xs text-red-100/80">
+        <nav aria-label="Legal" className="mb-2 flex justify-center gap-5">
+          <Link to="/privacy-policy" className="hover:text-white hover:underline">
+            Privacy Policy
+          </Link>
+          <Link to="/terms-and-conditions" className="hover:text-white hover:underline">
+            Terms and Conditions
+          </Link>
+        </nav>
         © 2026 Swati Publications. All rights reserved.
       </div>
     </footer>

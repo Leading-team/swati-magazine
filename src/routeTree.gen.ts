@@ -15,8 +15,10 @@ import { Route as ContactRouteImport } from './routes/contact'
 import { Route as EditionsRouteImport } from './routes/editions'
 import { Route as InspirationsRouteImport } from './routes/inspirations'
 import { Route as JourneyRouteImport } from './routes/journey'
+import { Route as PrivacyPolicyRouteImport } from './routes/privacy-policy'
 import { Route as SpecialRouteImport } from './routes/special'
 import { Route as SubscriptionRouteImport } from './routes/subscription'
+import { Route as TermsAndConditionsRouteImport } from './routes/terms-and-conditions'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -48,6 +50,11 @@ const JourneyRoute = JourneyRouteImport.update({
   path: '/journey',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PrivacyPolicyRoute = PrivacyPolicyRouteImport.update({
+  id: '/privacy-policy',
+  path: '/privacy-policy',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const SpecialRoute = SpecialRouteImport.update({
   id: '/special',
   path: '/special',
@@ -58,6 +65,11 @@ const SubscriptionRoute = SubscriptionRouteImport.update({
   path: '/subscription',
   getParentRoute: () => rootRouteImport,
 } as any)
+const TermsAndConditionsRoute = TermsAndConditionsRouteImport.update({
+  id: '/terms-and-conditions',
+  path: '/terms-and-conditions',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,8 +78,10 @@ export interface FileRoutesByFullPath {
   '/editions': typeof EditionsRoute
   '/inspirations': typeof InspirationsRoute
   '/journey': typeof JourneyRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/special': typeof SpecialRoute
   '/subscription': typeof SubscriptionRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -76,8 +90,10 @@ export interface FileRoutesByTo {
   '/editions': typeof EditionsRoute
   '/inspirations': typeof InspirationsRoute
   '/journey': typeof JourneyRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/special': typeof SpecialRoute
   '/subscription': typeof SubscriptionRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -87,8 +103,10 @@ export interface FileRoutesById {
   '/editions': typeof EditionsRoute
   '/inspirations': typeof InspirationsRoute
   '/journey': typeof JourneyRoute
+  '/privacy-policy': typeof PrivacyPolicyRoute
   '/special': typeof SpecialRoute
   '/subscription': typeof SubscriptionRoute
+  '/terms-and-conditions': typeof TermsAndConditionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -99,8 +117,10 @@ export interface FileRouteTypes {
     | '/editions'
     | '/inspirations'
     | '/journey'
+    | '/privacy-policy'
     | '/special'
     | '/subscription'
+    | '/terms-and-conditions'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -109,8 +129,10 @@ export interface FileRouteTypes {
     | '/editions'
     | '/inspirations'
     | '/journey'
+    | '/privacy-policy'
     | '/special'
     | '/subscription'
+    | '/terms-and-conditions'
   id:
     | '__root__'
     | '/'
@@ -119,8 +141,10 @@ export interface FileRouteTypes {
     | '/editions'
     | '/inspirations'
     | '/journey'
+    | '/privacy-policy'
     | '/special'
     | '/subscription'
+    | '/terms-and-conditions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -130,8 +154,10 @@ export interface RootRouteChildren {
   EditionsRoute: typeof EditionsRoute
   InspirationsRoute: typeof InspirationsRoute
   JourneyRoute: typeof JourneyRoute
+  PrivacyPolicyRoute: typeof PrivacyPolicyRoute
   SpecialRoute: typeof SpecialRoute
   SubscriptionRoute: typeof SubscriptionRoute
+  TermsAndConditionsRoute: typeof TermsAndConditionsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -178,6 +204,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof JourneyRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/privacy-policy': {
+      id: '/privacy-policy'
+      path: '/privacy-policy'
+      fullPath: '/privacy-policy'
+      preLoaderRoute: typeof PrivacyPolicyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/special': {
       id: '/special'
       path: '/special'
@@ -192,6 +225,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SubscriptionRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/terms-and-conditions': {
+      id: '/terms-and-conditions'
+      path: '/terms-and-conditions'
+      fullPath: '/terms-and-conditions'
+      preLoaderRoute: typeof TermsAndConditionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -202,8 +242,10 @@ const rootRouteChildren: RootRouteChildren = {
   EditionsRoute: EditionsRoute,
   InspirationsRoute: InspirationsRoute,
   JourneyRoute: JourneyRoute,
+  PrivacyPolicyRoute: PrivacyPolicyRoute,
   SpecialRoute: SpecialRoute,
   SubscriptionRoute: SubscriptionRoute,
+  TermsAndConditionsRoute: TermsAndConditionsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
