@@ -411,6 +411,9 @@ function SubscriptionPage() {
           : undefined
       const edition = getPlanEdition(offer.Title)
       const checkout = await createSubscriptionCheckout({
+        name: fullName,
+        email,
+        phone,
         planId,
         planSlug: offerSlug || planId,
         amount,

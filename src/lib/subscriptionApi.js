@@ -13,6 +13,22 @@ async function request(endpoint, { method = 'GET', body, signal, unwrap = true }
     signal,
   })
 
+  // Build a hidden form and POST it to CCAvenue (they require a browser form POST, not fetch/XHR)
+function postToGateway({ gatewayUrl, encRequest, accessCode }) {
+  const form = document.createElement("form");
+  form.method = "POST";
+  form.action = gatewayUrl;
+  [["encRequest", encRequest], ["access_code", accessCode]].forEach(([name, value]) => {
+    const input = document.createElement("input");
+    input.type = "hidden";
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  });
+  document.body.appendChild(form);
+  form.submit();
+}
+
   const payload = await response.json().catch(() => null)
   if (!response.ok) {
     throw new Error(payload?.message || payload?.error || `Request failed (HTTP ${response.status}).`)
@@ -61,9 +77,20 @@ export async function submitContactEnquiry(enquiry) {
   return request('/contact/submit-enquiry', { method: 'POST', body: enquiry })
 }
 
+// export async function createSubscriptionCheckout(checkoutData) {
+//   return request('/payment/create-order', { method: 'POST', body: checkoutData })
+// }
+
 export async function createSubscriptionCheckout(checkoutData) {
-  return request('/payment/create-order', { method: 'POST', body: checkoutData })
+ // return request('/payment/initiate', { method: 'POST', body: checkoutData })
+  const checkout = await request('/payment/initiate', {
+    method: 'POST',
+    body: checkoutData,
+  })
+  postToGateway(checkout)
+  return checkout
 }
+
 
 export async function verifySubscriptionPayment(payment) {
   const result = await request('/payment/verify', {
